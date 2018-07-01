@@ -6,3 +6,4 @@ This repo contains code for our CS 451 group project checkers application.
 
 - [ ] Add requirements to this README
 - [ ] Add purpose decription to this README
+- [ ] Define languages and other relavent technologies used in this README
