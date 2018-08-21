@@ -13,7 +13,7 @@
 	}
 	$gameid = $_GET['GAMEID'];
 	
-	$query = "select * from games where GAMEID = '$gameid'";
+	$query = "select * from games where GAMEID = " . $gameid . ";";
 	$result = $conn->query($sql);
 	
 	if ($result->num_rows > 0) {
