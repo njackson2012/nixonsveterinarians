@@ -25,6 +25,10 @@
 		$query = "update games set GAMESTATUS = " . $gamestatus . ", REQUESTSTATUS = " . $requeststatus . ", PLAYERTURN = " . $playerturn . " where GAMEID = " . $gameid . ";";
 		$result = $conn->query($query);
 	}
-	echo $query;
+	if ($conn->query($query) === TRUE) {
+		echo "New record created successfully";
+	} else {
+		echo "Error: " . $query . "<br>" . $conn->error;
+	}
 	$conn->close();
 ?>
