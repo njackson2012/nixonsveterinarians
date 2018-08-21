@@ -14,7 +14,7 @@
 	$gameid = $_GET['GAMEID'];
 	
 	$query = "select * from games where GAMEID = " . $gameid . ";";
-	$result = $conn->query($sql);
+	$result = $conn->query($query);
 	
 	if ($result->num_rows > 0) {
 		// output data of each row
