@@ -16,7 +16,7 @@
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
 	}
-	$sql = "SELECT * FROM games";
+	$sql = "SELECT * FROM games;";
 	$result = $conn->query($sql);
 	echo "Connected successfully";
 	echo $sql . " -> " . $result;
