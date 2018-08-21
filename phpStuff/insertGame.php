@@ -25,6 +25,6 @@
 		$query = "update games set GAMESTATUS = " . $gamestatus . ", REQUESTSTATUS = " . $requeststatus . ", PLAYERTURN = " . $playerturn . " where GAMEID = " . $gameid . ";";
 		$result = $conn->query($query);
 	}
-	echo $result;
+	echo $query;
 	$conn->close();
 ?>
