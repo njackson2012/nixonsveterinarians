@@ -1,14 +1,9 @@
-<html>
- <head>
-  <title>PHP Test</title>
- </head>
- <body>
  <?php
 	$servername = "den1.mysql4.gear.host";
 	$username = "nixondb";
 	$password = "Cy5G?_5x09e9";
 	$dbname = "nixondb";
-	$gameid = $_GET['message'];
+	$gameid = $_GET['GAMEID'] 
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
@@ -29,6 +24,4 @@
 		echo "0 results";
 	}
 	$conn->close();
-	?>
- </body>
-</html>
+?>
