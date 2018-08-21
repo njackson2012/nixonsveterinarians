@@ -6,7 +6,6 @@
 	$username = "nixondb";
 	$password = "Cy5G?_5x09e9";
 	$dbname = "nixondb";
-	$gameid = $_GET['message'];
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
@@ -15,7 +14,7 @@
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
 	}
-	$sql = "SELECT * FROM games WHERE GAMEID = " . $gameid . ";";
+	$sql = "SELECT * FROM games;";
 	$result = $conn->query($sql);
 	echo "Connected successfully <br>";
 	if ($result->num_rows > 0) {
