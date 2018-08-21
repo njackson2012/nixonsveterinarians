@@ -8,7 +8,7 @@
 	$username = "nixondb";
 	$password = "Cy5G?_5x09e9";
 	$dbname = "nixondb";
-	$gameid = 1;
+	$gameid = $_GET['message'];
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
