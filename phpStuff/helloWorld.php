@@ -19,7 +19,7 @@
 	$sql = "SELECT * FROM games";
 	$result = $conn->query($sql);
 	echo "Connected successfully";
-	echo $result;
+	echo $sql . " -> " . $result;
 	$conn->close();
 	?>
  </body>
