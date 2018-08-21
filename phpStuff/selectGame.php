@@ -4,18 +4,25 @@
 	$password = "Cy5G?_5x09e9";
 	$dbname = "nixondb";
 	
-    $dbconn = mysql_connect($servername, $username, $password, $dbname) or die('Could not connect: ' . mysql_error()); 
+    // Create connection
+	$conn = new mysqli($servername, $username, $password, $dbname);
+
+	// Check connection
+	if ($conn->connect_error) {
+		die("Connection failed: " . $conn->connect_error);
 	
-	$gameid = mysql_real_escape_string($_GET['GAMEID'], $dbconn); 
+	$gameid = $_GET['GAMEID'] 
 	
 	$query = "select * from games where GAMEID = '$gameid'";
-	$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+	$result = $conn->query($sql);
 	
-	$num_results = mysql_num_rows($result);  
- 
-    for($i = 0; $i < $num_results; $i++)
-    {
-         $row = mysql_fetch_array($result);
-         echo $row['GAMEID'] . "\t" . $row['GAMESTATUS'] . "\t" . $row['REQUESTSTATUS'] . "\t" . row['PLAYERTURN'] . "\n";
-    }
+	if ($result->num_rows > 0) {
+		// output data of each row
+		while($row = $result->fetch_assoc()) {
+			echo "id: " . $row["GAMEID"]. " - GameStatus: " . $row["GAMESTATUS"]. " - RequestStatus: " . $row["REQUESTSTATUS"]. " - Turn: " . $row["PLAYERTURN"] . "<br>";
+		}
+	} else {
+		echo "0 results";
+	}
+	$conn->close();
 ?>
