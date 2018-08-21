@@ -10,7 +10,7 @@
 	// Check connection
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
-	
+	}
 	$gameid = $_GET['GAMEID'];
 	
 	$query = "select * from games where GAMEID = '$gameid'";
