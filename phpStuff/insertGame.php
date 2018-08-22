@@ -20,13 +20,13 @@
 	
 	if (is_null($gameid)){
 		$query = "insert into games (GAMESTATUS, REQUESTSTATUS, PLAYERTURN) values (" . $gamestatus . ", " . $requeststatus . ", " . $playerturn . ");";
-		$result = $conn->query($query);
+		$exitMessage = "Record created successfully";
 	} else {
 		$query = "update games set GAMESTATUS = " . $gamestatus . ", REQUESTSTATUS = " . $requeststatus . ", PLAYERTURN = " . $playerturn . " where GAMEID = " . $gameid . ";";
-		$result = $conn->query($query);
+		$exitMessage = "Record updated successfully";
 	}
 	if ($conn->query($query) === TRUE) {
-		echo "New record created successfully";
+		echo $exitMessage;
 	} else {
 		echo "Error: " . $query . "<br>" . $conn->error;
 	}
