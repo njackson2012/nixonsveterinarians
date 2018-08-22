@@ -19,7 +19,7 @@
 	$color = $_GET['COLOR'];
 	$isking = $_GET['ISKING']; 
 	
-	if (is_null($gameid)){
+	if (is_null($pieceid)){
 		$query = "insert into pieces (GAMEID, LOCATION, COLOR, ISKING) values ((SELECT GAMEID from games where GAMEID = " . $gameid . "), " . $location . ", " . $color . ", " . $isking . ");";
 		$exitMessage = "Record created successfully";
 	} else {
