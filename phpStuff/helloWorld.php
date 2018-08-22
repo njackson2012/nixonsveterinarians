@@ -1,6 +1,3 @@
-<html>
-<head><title>Test</title></head>
-<body> 
  <?php
 	$servername = "den1.mysql4.gear.host";
 	$username = "nixondb";
@@ -39,5 +36,3 @@
 	}
 	$conn->close();
 ?>
-</body>
-</html>

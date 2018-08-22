@@ -19,7 +19,7 @@
 	if ($result->num_rows > 0) {
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
-			echo "id: " . $row["GAMEID"]. " - GameStatus: " . $row["GAMESTATUS"]. " - RequestStatus: " . $row["REQUESTSTATUS"]. " - Turn: " . $row["PLAYERTURN"] . "<br>";
+			echo "GameID: " . $row["GAMEID"]. " - GameStatus: " . $row["GAMESTATUS"]. " - RequestStatus: " . $row["REQUESTSTATUS"]. " - Turn: " . $row["PLAYERTURN"] . "<br>";
 		}
 	} else {
 		echo "0 results";
