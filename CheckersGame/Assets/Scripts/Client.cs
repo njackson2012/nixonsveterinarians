@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Assets.Scripts;
 
 public class Client : MonoBehaviour
 {
