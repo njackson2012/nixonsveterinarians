@@ -11,9 +11,10 @@
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
 	}
-	$gameid = $_GET['GAMEID'];
+	$searchType = $_GET['SEARCHTYPE'];
+	$searchValue = $_GET['SEARCHVALUE'];
 	
-	$query = "select * from games where GAMEID = " . $gameid . ";";
+	$query = "select * from games where " . $searchType . " = " . $searchValue . ";";
 	$result = $conn->query($query);
 	
 	if ($result->num_rows > 0) {

@@ -11,9 +11,10 @@
 	if ($conn->connect_error) {
 		die("Connection failed: " . $conn->connect_error);
 	}
-	$pieceid = $_GET['PIECEID'];
+	$searchType = $_GET['SEARCHTYPE'];
+	$searchValue = $_GET['SEARCHVALUE'];
 	
-	$query = "select * from pieces where PIECEID = " . $pieceid . ";";
+	$query = "select * from pieces where " . $searchType . " = " . $searchValue . ";";
 	$result = $conn->query($query);
 	
 	if ($result->num_rows > 0) {
