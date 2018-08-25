@@ -14,7 +14,11 @@
 	$searchType = $_GET['SEARCHTYPE'];
 	$searchValue = $_GET['SEARCHVALUE'];
 	
-	$query = "select * from games where " . $searchType . " = " . $searchValue . ";";
+	if (is_null($searchType)) {
+		$query = "select * from games;"
+	} else {
+		$query = "select * from games where " . $searchType . " = " . $searchValue . ";";
+	}
 	$result = $conn->query($query);
 	
 	if ($result->num_rows > 0) {
