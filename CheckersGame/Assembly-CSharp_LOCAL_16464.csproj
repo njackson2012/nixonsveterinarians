@@ -64,7 +64,6 @@
     <Compile Include="Assets\Scripts\Board.cs" />
     <Compile Include="Assets\Scripts\BoardLogic.cs" />
     <Compile Include="Assets\Scripts\Client.cs" />
-    <Compile Include="Assets\Scripts\ExitGame.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\HackshTable.cs" />
     <Compile Include="Assets\Scripts\Piece.cs" />
