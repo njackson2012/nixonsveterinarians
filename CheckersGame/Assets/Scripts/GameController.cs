@@ -49,7 +49,7 @@ public class GameController
     private Hashtable validMoves;
 
     ///////////////////////////////////////////////////////////////////
-    //////////////////////////// Constructor ////////////////////////////
+    //////////////////////////// Constructor //////////////////////////
     ///////////////////////////////////////////////////////////////////
     /// <summary>
     /// Constructor
@@ -64,23 +64,41 @@ public class GameController
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Get & Set ////////////////////////////
     ///////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Get the game status.
+    /// Options are “Ongoing”, “Waiting4Player2Join”, “WaitingForRequest”, “BlackWon”, or “RedWon”.
+    /// </summary>    
     public string GetGameStatus()
     {
         return gameStatus;
     }
 
+    /// <summary>
+    /// Get the request status.  Options are “None”, “DrawRequestBlack”, “DrawRequestRed”, “RematchRequestBlack”, or “RematchRequestRed”. 
+    /// </summary>    
     public string GetRequestStatus()
     {
         return requestStatus;
     }
 
+    /// <summary>
+    /// Set the request status.  Options are “None”, “DrawRequestBlack”, “DrawRequestRed”, “RematchRequestBlack”, or “RematchRequestRed”.
+    /// </summary>    
     public void SetRequestStatus(string status)
     {
         this.requestStatus = status;
     }
 
+    /// <summary>
+    /// Get the player turn.  Options are "Red" or "Black".   
+    /// </summary>    
     public string GetPlayerTurn()
     {
         return playerTurn;
     }
+
+    ///////////////////////////////////////////////////////////////////
+    //////////////////////////// Methods //////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+
 }
