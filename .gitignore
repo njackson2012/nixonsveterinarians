@@ -1,2 +1,6 @@
 CheckersGame/Library/*
 CheckersGame/.vs/CheckersGame/v15/.suo
+CheckersGame/Temp/*
+CheckersGame/obj/*
+CheckersGame/*.csproj
+*~
