@@ -3,4 +3,6 @@ CheckersGame/.vs/CheckersGame/v15/.suo
 CheckersGame/Temp/*
 CheckersGame/obj/*
 CheckersGame/*.csproj
+UnitTests/obj/*
+UnitTests/*.csproj
 *~

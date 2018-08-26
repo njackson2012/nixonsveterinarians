@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckersGame", "Assembly-CSharp.csproj", "{49CC6567-94DB-9294-64DB-D94106237A04}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{49CC6567-94DB-9294-64DB-D94106237A04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "..\UnitTests\UnitTests.csproj", "{D48F690A-0935-4215-ADD2-3AE85FA2AF9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +17,16 @@ Global
 		{49CC6567-94DB-9294-64DB-D94106237A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49CC6567-94DB-9294-64DB-D94106237A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49CC6567-94DB-9294-64DB-D94106237A04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D48F690A-0935-4215-ADD2-3AE85FA2AF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D48F690A-0935-4215-ADD2-3AE85FA2AF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D48F690A-0935-4215-ADD2-3AE85FA2AF9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D48F690A-0935-4215-ADD2-3AE85FA2AF9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53CE0B47-916D-427F-9D27-091464A877A6}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
