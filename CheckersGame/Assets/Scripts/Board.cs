@@ -3,44 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Board : MonoBehaviour {
-    private Piece[] pieces = new Piece[24];
 
-    public GameObject redPiecePreFab;
+    public Piece[,] pieces = new Piece[8, 8];
+    public GameObject redPiece;
+    public GameObject blackPiece;
 
-    public GameObject blackPiecePreFab;
+    public Vector3 boardOffset = new Vector3(4.0f, 0, 4.0f);
 
-    //some parameter defined by Nick - what does that database need from us to know which game to get the piece array from?
-    public Piece[] GetPieces()
+    // New game board function
+    private void GenerateBoard()
     {
-        return pieces;
-    }
-
-    public void RemovePiece(int pieceId)
-    {
-        for (int i = 0; i < pieces.Length; i++)
+        // Red pieces
+        for(int y = 0; y < 3; y++)
         {
-            if (pieces[i].GetId() == pieceId)
+            for(int x = 0; x < 8; x += 2)
             {
-                pieces[i].SetLocation(new int[] { -1, -1 });
+                GeneratePiece(x, y);
             }
         }
     }
-    public void GenerateBoard()
+
+    private void GeneratePiece(int x, int y)
     {
-        //Generate Red Pieces
-
-        //Generate Black Pieces
-
-    }
-    // Use this for initialization
-    public void Start()
-    {
-
+        GameObject newpiece = Instantiate(redPiece) as GameObject;
+        newpiece.transform.SetParent(transform);
+        Piece p = newpiece.GetComponent<Piece>();
+        pieces[x, y] = p;
+        MovePiece(p, x, y);
     }
 
-    // Update is called once per frame
-    public void Update()
+    private void MovePiece(Piece p, int x, int y)
     {
-
+        p.transform.position = (Vector3.right * x) + (Vector3.forward * y) + boardOffset;
     }
+
+	// Use this for initialization
+	void Start () {
+        GenerateBoard();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
 }
