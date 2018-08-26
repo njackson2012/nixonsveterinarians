@@ -164,6 +164,14 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 500511839731c9c48be9182635f635e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 500511839731c9c48be9182635f635e4, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 500511839731c9c48be9182635f635e4, type: 3}
   m_IsPrefabAsset: 0
@@ -185,7 +193,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   redPiece: {fileID: 1488191905251818, guid: f10a28f346d20f74396c2e8b262deb34, type: 2}
   blackPiece: {fileID: 1399742712303704, guid: 7ff02449f8b076f45b96d3bdeb43dc78, type: 2}
-  boardOffset: {x: 4, y: 0, z: 4}
 --- !u!114 &231819996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +210,18 @@ MonoBehaviour:
   insertPieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/insertPiece.php?
   selectPieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/selectPiece.php?
   deletePieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/deletePiece.php?
+--- !u!65 &231819997
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 231819994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.08, y: 0.08, z: 0.001}
+  m_Center: {x: 0, y: 0, z: -0}
 --- !u!1 &295993546
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,6 +419,10 @@ Prefab:
     - target: {fileID: 400000, guid: 59194a293ae4cff49a474825bbf7ec31, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 59194a293ae4cff49a474825bbf7ec31, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59194a293ae4cff49a474825bbf7ec31, type: 3}
