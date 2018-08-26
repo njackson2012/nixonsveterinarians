@@ -11,7 +11,6 @@ public class BoardLogic {
     /// </summary>
     private PieceLogic[] pieces = new PieceLogic[24];
 
-    //some parameter defined by Nick - what does that database need from us to know which game to get the piece array from?
     /// <summary>
     /// Get's the pieces.
     /// </summary>
@@ -19,6 +18,24 @@ public class BoardLogic {
     {
         return pieces;
     }
+
+    /// <summary>
+    /// Set's the pieces.
+    /// </summary>
+    public void SetPieces(PieceLogic[] pieces)
+    {
+        this.pieces = pieces;
+    }
+
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public BoardLogic(PieceLogic[] pieces)
+    {
+        this.pieces = pieces;
+    }
+
 
     /// <summary>
     /// Removes a piece from the board.
