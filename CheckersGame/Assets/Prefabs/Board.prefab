@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1836344357848564}
+  m_IsPrefabAsset: 1
+--- !u!1 &1836344357848564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4983983421971962}
+  - component: {fileID: 33922427641118736}
+  - component: {fileID: 23707828891187296}
+  - component: {fileID: 114091853098286242}
+  - component: {fileID: 114252368247992180}
+  m_Layer: 0
+  m_Name: Board
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4983983421971962
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836344357848564}
+  m_LocalRotation: {x: -0.70714056, y: -0.000030735275, z: -0.000027456852, w: 0.707073}
+  m_LocalPosition: {x: -0, y: -0.000000029802322, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: -0.004}
+--- !u!23 &23707828891187296
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836344357848564}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: e764341ce52b5d84e8763597fd625ec4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33922427641118736
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836344357848564}
+  m_Mesh: {fileID: 4300000, guid: 500511839731c9c48be9182635f635e4, type: 3}
+--- !u!114 &114091853098286242
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836344357848564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef2cc3946c6ef1488541f0422bba227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redPiecePreFab: {fileID: 1488191905251818, guid: f10a28f346d20f74396c2e8b262deb34,
+    type: 2}
+  blackPiecePreFab: {fileID: 100000, guid: bd9dd1971233e07419bd7b93e30db8b2, type: 3}
+--- !u!114 &114252368247992180
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836344357848564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de9254086767e5945b55e5e90e03b2be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  insertGameURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/insertGame.php?
+  selectGameURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/selectGame.php?
+  deleteGameURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/deleteGame.php?
+  insertPieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/insertPiece.php?
+  selectPieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/selectPiece.php?
+  deletePieceURL: http://nixonphpconnector.gearhostpreview.com/phpStuff/deletePiece.php?
