@@ -66,5 +66,98 @@ namespace Assets.Scripts
                 }
             }
         }
+        public string[] getAllInEntry(string key)
+        {
+            if(!table.ContainsKey(key))
+            {
+                return new string[0];
+            }
+            return table[key];
+        }
+        public string toString()
+        {
+            string[][] data = new string[table.Count][];
+            int iterator = 0;
+
+            foreach (KeyValuePair<string, string[]> entry in table)
+            {
+                data[iterator] = entryToStringArray(entry.Key, entry.Value);
+                iterator += 1;
+            }
+
+            string finalValue = "";
+            for (int i = 0; i < data[0].Length; i++)
+            {
+                for (int j = 0; j < data.Length; j++)
+                {
+                    if (j == data.Length - 1)
+                    {
+                        finalValue += data[j][i] + "\n";
+                    }
+                    else
+                    {
+                        finalValue += data[j][i] + "|";
+                    }
+                }
+                if (i == 0)
+                {
+                    int len = finalValue.Length;
+                    for (int j = 0; j < len - 1; j++)
+                    {
+                        finalValue += "-";
+                    }
+                    finalValue += "\n";
+                }
+            }
+
+            return finalValue;
+        }
+        private string[] entryToStringArray(string key, string[] values)
+        {
+            int width = key.Length;
+            int rowCount = 1;
+            foreach (string word in values)
+            {
+                if (width < word.Length)
+                {
+                    width = word.Length;
+                }
+                rowCount += 1;
+            }
+            string[] formatted = new string[rowCount];
+            formatted[0] = key + makeSpace(width - key.Length);
+
+            for (int i = 1; i < rowCount; i++)
+            {
+                formatted[i] = values[i-1] + makeSpace(width - values[i-1].Length);
+            }
+
+            return formatted;
+        }
+        private string makeSpace(int width)
+        {
+            string formatted = "";
+            for(int i = 0; i < width; i++)
+            {
+                formatted += " ";
+            }
+            return formatted;
+        }
+        public void generateFromRaw(string raw)
+        {
+            string[] segmented = raw.Split('-');
+            foreach (string segment in segmented)
+            {
+                string[] entry = segment.Split(':');
+                if (entry.Length == 1)
+                {
+                    this.add(entry[0], null);
+                }
+                else
+                {
+                    this.add(entry[0], entry[1]);
+                }
+            }
+        }
     }
 }

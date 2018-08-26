@@ -24,7 +24,7 @@
 	if ($result->num_rows > 0) {
 		// output data of each row
 		while($row = $result->fetch_assoc()) {
-			echo "PieceID: " . $row["PIECEID"]. " - GameID: " . $row["GAMEID"]. " - Location: " . $row["LOCATION"]. " - Color: " . $row["COLOR"] . " - IsKing: " . $row["ISKING"] . "<br>";
+			echo "PieceID:" . $row["PIECEID"]. "-GameID:" . $row["GAMEID"]. "-Location:" . $row["LOCATION"]. "-Color:" . $row["COLOR"] . "-IsKing:" . $row["ISKING"] . "-";
 		}
 	} else {
 		echo "0 results";
