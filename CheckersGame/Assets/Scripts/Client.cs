@@ -26,7 +26,7 @@ public class Client : MonoBehaviour
         // If not, abort game. Maybe a ping endpoint could be established.
     }
 
-    string getGame(int ID)
+    string[][] getGame(int ID)
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMEID\"&SEARCHVALUE=" + ID);
         while(! selectResult.isDone)
@@ -38,10 +38,10 @@ public class Client : MonoBehaviour
         HackshTable gameTable = new HackshTable();
         gameTable.generateFromRaw(gameRaw);
 
-        return gameTable.toString();
+        return gameTable.toArray();
     }
 
-    string findOpenGames()
+    string[][] findOpenGames()
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMESTATUS\"&SEARCHVALUE=\"Waiting4Player2Join\"");
         while(! selectResult.isDone)
@@ -54,7 +54,7 @@ public class Client : MonoBehaviour
         HackshTable gameTable = new HackshTable();
         gameTable.generateFromRaw(gameRaw);
 
-        return gameTable.toString();
+        return gameTable.toArray();
     }
 
     string listDatbase()

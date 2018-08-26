@@ -74,6 +74,28 @@ namespace Assets.Scripts
             }
             return table[key];
         }
+        public string[][] toArray()
+        {
+            string[][] formatted;
+            if (table.ContainsKey("PieceID"))
+            {
+                formatted = new string[5][];
+                formatted[0] = table["PieceID"];
+                formatted[1] = table["GameID"];
+                formatted[2] = table["Location"];
+                formatted[3] = table["Color"];
+                formatted[4] = table["IsKing"];
+            }
+            else
+            {
+                formatted = new string[4][];
+                formatted[0] = table["GameID"];
+                formatted[1] = table["GameStatus"];
+                formatted[2] = table["RequestStatus"];
+                formatted[3] = table["Turn"];
+            }
+            return formatted;
+        }
         public string toString()
         {
             string[][] data = new string[table.Count][];
