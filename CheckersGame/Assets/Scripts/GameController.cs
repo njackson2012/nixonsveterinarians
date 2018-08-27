@@ -280,8 +280,12 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
-                if(availableTargets[0] != -1)
-                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                if (availableTargets[0] != -1)
+                {
+                    int[] nonRefAvailTargets = new int[8];
+                    availableTargets.CopyTo(nonRefAvailTargets, 0);
+                    AddToHashTable(currPos, nonRefAvailTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                }
             }
         }
     }
@@ -331,7 +335,11 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
-                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                {
+                    int[] nonRefAvailTargets = new int[8];
+                    availableTargets.CopyTo(nonRefAvailTargets, 0);
+                    AddToHashTable(currPos, nonRefAvailTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                }
             }
         }
     }
@@ -406,7 +414,11 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
-                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                {
+                    int[] nonRefAvailTargets = new int[8];
+                    availableTargets.CopyTo(nonRefAvailTargets,0);
+                    AddToHashTable(currPos, nonRefAvailTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                }
             }
         }
     }
@@ -449,7 +461,11 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
-                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                {
+                    int[] nonRefAvailTargets = new int[8];
+                    availableTargets.CopyTo(nonRefAvailTargets, 0);
+                    AddToHashTable(currPos, nonRefAvailTargets);//_validMoves.Add(currPos, availableTargets);/**/
+                }
 
             }
         }
@@ -477,7 +493,7 @@ public class GameController
         //otherwise, the square is available
         return true;
     }
-
+    /*
     /// <summary>
     /// Checks whether any of the valid moves results in a piece being kinged.
     /// If so, returns true.  If not, returns false.
@@ -489,16 +505,18 @@ public class GameController
         //If the player is red, then the
         return true;
     }
-
+    */
 
     /// <summary>
     /// Checks whether the piece is king at the end of its move.
-    ///todo: NOT DONE YET
     /// </summary>    
     public bool IsMoveValid(int[,] move)
     {
-        //create hashtable of all valid moves (_validMoves)
-        FindValidMoves();
+        //if destination of move is off board, the move is not valid.
+        if (move[1, 0] < 0 || move[1, 0] > 7 || move[1, 1] < 0 || move[1, 1] > 7)
+            return false;
+            //create hashtable of all valid moves (_validMoves)
+            FindValidMoves();
         //grab the starting position and finishing position of the argument move
         int[] start = new int[2];
         int[] finish = new int[2];
@@ -525,7 +543,7 @@ public class GameController
             if (validFinishes[i] == -1)
                 return false;
             //If we find the move, it is valid
-            if (validFinishes[i] == finish[i] && validFinishes[i + 1] == finish[i + 1])
+            if (validFinishes[i] == finish[0] && validFinishes[i + 1] == finish[1])
                 return true;
         }
         //if we get through the whole list of valid moves and don't find our move, it is not valid.
