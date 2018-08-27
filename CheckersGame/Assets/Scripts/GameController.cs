@@ -11,11 +11,6 @@ public class GameController
     ///////////////////////////////////////////////////////////////////
 
     /// <summary>
-    /// The entity though which GameController communicates with the GearHost Database.
-    /// </summary>    
-    private Client _client = new Client();
-
-    /// <summary>
     /// The checkerboard on which the game is played.  Contains the pieces.
     /// </summary>    
     private BoardLogic _board;
@@ -76,13 +71,6 @@ public class GameController
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Get & Set ////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Get the game client.
-    /// </summary>    
-    public Client GetClient()
-    {
-        return _client;
-    }
 
     /// <summary>
     /// Get the game id.
@@ -171,7 +159,7 @@ public class GameController
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
-            string currPlayerTurn = GetClient().getGame(GetGameId())[4][0];
+            string currPlayerTurn = Client.getGame(GetGameId())[4][0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;

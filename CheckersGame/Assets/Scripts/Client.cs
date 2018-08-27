@@ -4,29 +4,29 @@ using System.Threading;
 using UnityEngine;
 using Assets.Scripts;
 
-public class Client : MonoBehaviour
+public static class Client// : MonoBehaviour //commented out because not unity UI class
 {
     // PHP endpoint URLS for Game management
-    public string insertGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/insertGame.php?";
-    public string selectGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/selectGame.php?";
-    public string deleteGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/deleteGame.php?";
+    public static string insertGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/insertGame.php?";
+    public static string selectGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/selectGame.php?";
+    public static string deleteGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/deleteGame.php?";
 
     // PHP endpoint URLs for Piece management
-    public string insertPieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/insertPiece.php?";
-    public string selectPieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/selectPiece.php?";
-    public string deletePieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/deletePiece.php?";
+    public static string insertPieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/insertPiece.php?";
+    public static string selectPieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/selectPiece.php?";
+    public static string deletePieceURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/deletePiece.php?";
 
     // The URL below is for a test script. I doubt I'll ever need it again, but I don't want to delelte it yet.
     // public string helloWorldURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/helloWorld.php";
     // Use this for initialization
-    void Start()
+/*    void Start()
     {
         print("Client running");
         // TODO: add a check to determine if connected to the database on strart. 
         // If not, abort game. Maybe a ping endpoint could be established.
     }
-
-    public string[][] getGame(int ID)
+    */
+    public static string[][] getGame(int ID)
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMEID\"&SEARCHVALUE=" + ID);
         while(! selectResult.isDone)
@@ -41,7 +41,7 @@ public class Client : MonoBehaviour
         return gameTable.toArray();
     }
 
-    public string[][] findOpenGames()
+    public static string[][] findOpenGames()
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMESTATUS\"&SEARCHVALUE=\"Waiting4Player2Join\"");
         while(! selectResult.isDone)
@@ -57,7 +57,7 @@ public class Client : MonoBehaviour
         return gameTable.toArray();
     }
 
-    public int createGame(string startingColor)
+    public static int createGame(string startingColor)
     {
         WWW insertResult = new WWW(insertGameURL + "REQUESTSTATUS=\"Waiting4Player2Join\"&REQUESTSTATUS=NULL&PLAYERTURN=\"Black\"");
         while (!insertResult.isDone)
@@ -74,7 +74,7 @@ public class Client : MonoBehaviour
         return -1;
     }
 
-    public string listDatbase()
+    public static string listDatbase()
     {
         WWW gameResults = new WWW(selectGameURL);
         while(! gameResults.isDone)
@@ -103,10 +103,11 @@ public class Client : MonoBehaviour
         
         return formatted;
     }
-
+/*
     // Update is called once per frame
     void Update()
     {
 
     }
+    */
 }
