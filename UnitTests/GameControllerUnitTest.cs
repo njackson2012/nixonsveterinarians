@@ -6,6 +6,7 @@ namespace UnitTests
     [TestClass]
     public class GameControllerUnitTest
     {
+        //Helper Method which constructs a game controller.  Is used by many other tests.
         [TestMethod]
         public GameController BuildGameController()
         {
@@ -25,13 +26,40 @@ namespace UnitTests
             testGc.SetGameStatus("Ongoing");
             return testGc;
         }
+
+        //Tests the Game Controller Constructor
         [TestMethod]
         public void TestGameController()
         {
-
             GameController testGc = BuildGameController();
             Assert.AreEqual("Red", testGc.GetPlayerColor());
             Assert.AreEqual(2, testGc.GetGameId());
         }
+
+        //Tests GetGameId()
+        [TestMethod]
+        public void TestGetGameId()
+        {
+            GameController testGc = BuildGameController();
+            Assert.AreEqual(2, testGc.GetGameId());
+        }
+
+        //Tests GetGameStatus()
+        [TestMethod]
+        public void TestGetGameStatus()
+        {
+            GameController testGc = BuildGameController();
+            Assert.AreEqual("Ongoing", testGc.GetGameStatus());
+        }
+
+        //Tests GetRequestStatus()
+        [TestMethod]
+        public void TestGetRequestStatus()
+        {
+            GameController testGc = BuildGameController();
+            Assert.AreEqual("None", testGc.GetRequestStatus());
+
+        }
+
     }
 }

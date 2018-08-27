@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading;
 
 /// <summary>
@@ -220,18 +221,43 @@ public class GameController
     /// <summary>
     /// Adds all possible jumps for the black player to validMoves.
     /// </summary>    
+    private void PlaceInAvailableTargets(ref Nullable<int>[,] availableTargets, int[] newTarget)
+    {
+        for (int i = 0; i < availableTargets.Length; i++)
+        {
+            if (availableTargets[i, 0].HasValue)
+            {
+                availableTargets[i, 0] = newTarget[0];
+                availableTargets[i, 1] = newTarget[1];
+                return;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Adds all possible jumps for the black player to validMoves.
+    /// </summary>    
     private void FindJumpsBlack()
     {
         int[] currPos = new int[2];
         int[] target = new int[2];
         int[] enemy = new int[2];
-
+        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
+        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
+        Nullable<int>[,] availableTargets = new Nullable<int>[4,2];
         //look through all pieces in the piece array.
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
+                //re-initialize the array to Null each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                {
+                    availableTargets[j, 0] = null;
+                    availableTargets[j, 1] = null;
+                }
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -242,7 +268,7 @@ public class GameController
                 enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
                 //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
@@ -251,14 +277,17 @@ public class GameController
                 enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
+
+                //If we have added any values, add the list to the hash table
+                if(availableTargets[0,0].HasValue)
+                    _validMoves.Add(currPos, availableTargets);
             }
         }
     }
 
     /// <summary>
     /// Adds all possible jumps for the red player to validMoves.
-    /// Todo: finish
     /// </summary>    
     private void FindJumpsRed()
     {
@@ -266,12 +295,22 @@ public class GameController
         int[] target = new int[2];
         int[] enemy = new int[2];
 
+        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
+        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
+        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+
         //look through all pieces in the piece array.
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
+                //re-initialize the array to Null each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                {
+                    availableTargets[j, 0] = null;
+                    availableTargets[j, 1] = null;
+                }
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -282,7 +321,7 @@ public class GameController
                 enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
                 //add the jump to valid moves.  (NOTE: for Red, up is pos, left is pos, right is neg.) 
@@ -291,7 +330,11 @@ public class GameController
                 enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
+
+                //If we have added any values, add the list to the hash table
+                if (availableTargets[0, 0].HasValue)
+                    _validMoves.Add(currPos, availableTargets);
             }
         }
     }
@@ -335,12 +378,23 @@ public class GameController
     {
         int[] currPos = new int[2];
         int[] target = new int[2];
+        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
+        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
+        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+
+
         //look through all pieces in the piece array.  
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
+                //re-initialize the array to Null each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                {
+                    availableTargets[j, 0] = null;
+                    availableTargets[j, 1] = null;
+                }
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -348,13 +402,17 @@ public class GameController
                 target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and to the right is available and legal, add it to valid moves.
                 target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target))
-                    _validMoves.Add(currPos, target);
+                    PlaceInAvailableTargets(ref availableTargets, target);
+
+                //If we have added any values, add the list to the hash table
+                if (availableTargets[0, 0].HasValue)
+                    _validMoves.Add(currPos, availableTargets);
             }
         }
     }
@@ -366,12 +424,22 @@ public class GameController
     {
         int[] currPos = new int[2];
         int[] target = new int[2];
+        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
+        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
+        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+
         //look through all pieces in the piece array.  
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
+                //re-initialize the array to Null each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                {
+                    availableTargets[j, 0] = null;
+                    availableTargets[j, 1] = null;
+                }
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -379,17 +447,17 @@ public class GameController
                 target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target))
-                {
-                    _validMoves.Add(target, currPos);
-                }
+                    PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and to the right is available and legal, add it to valid moves.
                 target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target))
-                {
-                    _validMoves.Add(target, currPos);
-                }
+                    PlaceInAvailableTargets(ref availableTargets, target);
+
+                //If we have added any values, add the list to the hash table
+                if (availableTargets[0, 0].HasValue)
+                    _validMoves.Add(currPos, availableTargets);
             }
         }
     }
