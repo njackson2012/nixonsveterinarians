@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 
 /// <summary>
 /// Controls the logic of a checkers game.
@@ -15,39 +13,44 @@ public class GameController
     /// <summary>
     /// The entity though which GameController communicates with the GearHost Database.
     /// </summary>    
-    private Client client;
+    private Client _client;
 
     /// <summary>
     /// The checkerboard on which the game is played.  Contains the pieces.
     /// </summary>    
-    private BoardLogic board;
+    private BoardLogic _board;
+
+    /// <summary>
+    /// The id of the game.
+    /// </summary>    
+    private int _gameid;
 
     /// <summary>
     /// The status of the game.
     /// Can be: “Ongoing”, “Waiting4Player2Join”, “WaitingForRequest”, “BlackWon”, or “RedWon”.
     /// </summary>    
-    private string gameStatus;
+    private string _gameStatus;
 
     /// <summary>
     /// The request of a status.
     /// Can be: “None”, “DrawRequestBlack”, “DrawRequestRed”, “RematchRequestBlack”, or “RematchRequestRed”.
     /// </summary>    
-    private string requestStatus;
+    private string _requestStatus;
 
     /// <summary>
     /// The player whose turn it is to move.  Can be "Red" or "Black".
     /// </summary>    
-    private string playerTurn;
+    private string _playerTurn;
 
     /// <summary>
     /// The player's color.  Can be "Red" or "Black".
     /// </summary>    
-    private string playerColor;
+    private string _playerColor;
 
     /// <summary>
     /// A Hashtable of available moves.  
     /// </summary>    
-    private Hashtable validMoves;
+    private Hashtable _validMoves;
 
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
@@ -55,9 +58,10 @@ public class GameController
     /// <summary>
     /// Constructor
     /// </summary>
-    public GameController(string playerColor)
+    public GameController(int gameId, string playerColor)
     {
-        this.playerColor = playerColor;
+        this._playerColor = playerColor;
+        this._gameid = gameId;
     }
 
 
@@ -66,12 +70,28 @@ public class GameController
     //////////////////////////// Get & Set ////////////////////////////
     ///////////////////////////////////////////////////////////////////
     /// <summary>
+    /// Get the game client.
+    /// </summary>    
+    public Client GetClient()
+    {
+        return _client;
+    }
+
+    /// <summary>
+    /// Get the game id.
+    /// </summary>    
+    public int GetGameId()
+    {
+        return _gameid;
+    }
+
+    /// <summary>
     /// Get the game status.
     /// Options are “Ongoing”, “Waiting4Player2Join”, “WaitingForRequest”, “BlackWon”, or “RedWon”.
     /// </summary>    
     public string GetGameStatus()
     {
-        return gameStatus;
+        return _gameStatus;
     }
 
     /// <summary>
@@ -79,7 +99,7 @@ public class GameController
     /// </summary>    
     public string GetRequestStatus()
     {
-        return requestStatus;
+        return _requestStatus;
     }
 
     /// <summary>
@@ -87,7 +107,23 @@ public class GameController
     /// </summary>    
     public void SetRequestStatus(string status)
     {
-        this.requestStatus = status;
+        this._requestStatus = status;
+    }
+
+    /// <summary>
+    /// Get the player color.  Options are "Red" or "Black".   
+    /// </summary>    
+    public string GetPlayerColor()
+    {
+        return _playerColor;
+    }
+
+    /// <summary>
+    /// Set the player turn.  Options are "Red" or "Black".   
+    /// </summary>    
+    public void SetPlayerTurn(string playerTurn)
+    {
+        this._playerTurn = playerTurn;
     }
 
     /// <summary>
@@ -95,12 +131,17 @@ public class GameController
     /// </summary>    
     public string GetPlayerTurn()
     {
-        return playerTurn;
+        return _playerTurn;
     }
 
-    ///////////////////////////////////////////////////////////////////
-    //////////////////////////// Methods //////////////////////////////
-    ///////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Get the player's valid turns. 
+    /// </summary>    
+    public Hashtable GetValidMoves()
+    {
+        return _validMoves;
+    }
+
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Methods //////////////////////////////
     ///////////////////////////////////////////////////////////////////
@@ -114,13 +155,12 @@ public class GameController
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
-            string currPlayerTurn = "Nicks stuff here";
-            if (currPlayerTurn == this.playerTurn)
+            string currPlayerTurn = GetClient().getGame(GetGameId())[4][0];
+            if (currPlayerTurn == this.GetPlayerTurn())
             {
                 return true;
             }
-
-            Thread.Sleep(1000);
+            Thread.Sleep(200);
         }
     }
 
@@ -129,20 +169,19 @@ public class GameController
     /// </summary>    
     public void SwitchTurn()
     {
-        if (playerTurn == "Red")
-            playerTurn = "Black";
-        else if (playerTurn == "Black")
-            playerTurn = "Red";
+        if (GetPlayerTurn() == "Red")
+            SetPlayerTurn("Black");
+        else if (GetPlayerTurn() == "Black")
+            SetPlayerTurn("Red");
     }
 
     /// <summary>
     /// Clears previous valid moves from validMoves and adds all valid moves to validMoves.
-    /// Todo: finish find Jumps.  
     /// </summary>    
     public void FindValidMoves()
     {
         //remove previous valid moves
-        validMoves.Clear();
+        _validMoves.Clear();
 
         //if there are no jumps, then add slides to validMoves.  If there are jumps, they will automatically be added to validMoves
         //and no slide will be valid.  (A rule of checkers - if you can jump, you have to.)
@@ -154,20 +193,19 @@ public class GameController
 
     /// <summary>
     /// Adds all possible jumps to valid moves.
-    /// Todo: finish
     /// </summary>    
     private bool FindJumps()
     {
-        if (playerColor == "Black")
+        if (GetPlayerColor() == "Black")
         {
             FindJumpsBlack();
         }
-        else if (playerColor == "Red")
+        else if (GetPlayerColor() == "Red")
         {
             FindJumpsRed();
         }
         //if no moves are found, return false.  Otherwise, return true.
-        if (validMoves.Count == 0)
+        if (GetValidMoves().Count == 0)
         {
             return false;
         }
@@ -177,43 +215,39 @@ public class GameController
 
     /// <summary>
     /// Adds all possible jumps for the black player to validMoves.
-    /// Todo: finish
     /// </summary>    
     private void FindJumpsBlack()
     {
-        //look through all pieces in the piece array.  If their color matches the player's color, check for slides available to that piece.
-        for (int i = 0; i < board.GetPieces().Length; i++)
+        int[] currPos = new int[2];
+        int[] target = new int[2];
+        int[] enemy = new int[2];
+
+        //look through all pieces in the piece array.
+        for (int i = 0; i < _board.GetPieces().Length; i++)
         {
-            if (board.GetPieces()[i].GetColor() == playerColor)
+            //If their color matches the player's color, check for slides available to that piece.
+            if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                int[] currPos = new int[2];
-                currPos[0] = board.GetPieces()[i].GetLocation()[0];
-                currPos[1] = board.GetPieces()[i].GetLocation()[1];
+                currPos[0] = _board.GetPieces()[i].GetLocation()[0];
+                currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
                 //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
                 //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
-                int[] lefttarget = new int[2];
-                lefttarget[0] = board.GetPieces()[i].GetLocation()[0] - 2;
-                lefttarget[1] = board.GetPieces()[i].GetLocation()[1] - 2;
-                int[] leftenemy = new int[2];
-                leftenemy[0] = board.GetPieces()[i].GetLocation()[0] - 1;
-                leftenemy[1] = board.GetPieces()[i].GetLocation()[1] - 1;
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                    _validMoves.Add(currPos, target);
 
-/*                if (IsAvailableAndLegal(lefttarget) && HoldsOpponent(leftenemy))
-                {
-                    validMoves.Add(currPos, lefttarget);
-                }
-                */
-
-
-                //If the space up and to the right is available and legal, add it to valid moves.
-                int[] righttarget = new int[2];
-                righttarget[0] = board.GetPieces()[i].GetLocation()[0] - 1;
-                righttarget[1] = board.GetPieces()[i].GetLocation()[1] + 1;
-                if (IsAvailableAndLegal(righttarget))
-                {
-                    validMoves.Add(currPos, righttarget);
-                }
+                //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
+                //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                    _validMoves.Add(currPos, target);
             }
         }
     }
@@ -224,7 +258,55 @@ public class GameController
     /// </summary>    
     private void FindJumpsRed()
     {
+        int[] currPos = new int[2];
+        int[] target = new int[2];
+        int[] enemy = new int[2];
 
+        //look through all pieces in the piece array.
+        for (int i = 0; i < _board.GetPieces().Length; i++)
+        {
+            //If their color matches the player's color, check for slides available to that piece.
+            if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
+            {
+                currPos[0] = _board.GetPieces()[i].GetLocation()[0];
+                currPos[1] = _board.GetPieces()[i].GetLocation()[1];
+
+                //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
+                //add the jump to valid moves.  (NOTE: for Red, up is positive, left is pos, right is neg.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                    _validMoves.Add(currPos, target);
+
+                //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
+                //add the jump to valid moves.  (NOTE: for Red, up is pos, left is pos, right is neg.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                    _validMoves.Add(currPos, target);
+            }
+        }
+    }
+
+    /// <summary>
+    /// If target is occupied by an opponent's piece, returns true.  Otherwise, returns false.
+    /// </summary>    
+    private bool HoldsOpponent(int[] target)
+    {
+        for (int i = 0; i < _board.GetPieces().Length; i++)
+        {
+            if (_board.GetPieces()[i].GetColor() != GetPlayerColor() &&
+                _board.GetPieces()[i].GetLocation()[0] == target[0] &&
+                _board.GetPieces()[i].GetLocation()[1] == target[1])
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>
@@ -232,11 +314,11 @@ public class GameController
     /// </summary>    
     private void FindSlides()
     {
-        if (playerColor == "Black")
+        if (GetPlayerColor() == "Black")
         {
             FindSlidesBlack();
         }
-        else if (playerColor == "Red")
+        else if (GetPlayerColor() == "Red")
         {
             FindSlidesRed();
         }
@@ -247,32 +329,28 @@ public class GameController
     /// </summary>    
     private void FindSlidesBlack()
     {
-        //look through all pieces in the piece array.  If their color matches the player's color, check for slides available to that piece.
-        for (int i = 0; i < board.GetPieces().Length; i++)
+        int[] currPos = new int[2];
+        int[] target = new int[2];
+        //look through all pieces in the piece array.  
+        for (int i = 0; i < _board.GetPieces().Length; i++)
         {
-            if (board.GetPieces()[i].GetColor() == playerColor)
+            //If their color matches the player's color, check for slides available to that piece.
+            if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                int[] currPos = new int[2];
-                currPos[0] = board.GetPieces()[i].GetLocation()[0];
-                currPos[1] = board.GetPieces()[i].GetLocation()[1];
+                currPos[0] = _board.GetPieces()[i].GetLocation()[0];
+                currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
                 //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
-                int[] lefttarget = new int[2];
-                lefttarget[0] = board.GetPieces()[i].GetLocation()[0] - 1;
-                lefttarget[1] = board.GetPieces()[i].GetLocation()[1] - 1;
-                if (IsAvailableAndLegal(lefttarget))
-                {
-                    validMoves.Add(currPos, lefttarget);
-                }
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                if (IsAvailableAndLegal(target))
+                    _validMoves.Add(currPos, target);
 
                 //If the space up and to the right is available and legal, add it to valid moves.
-                int[] righttarget = new int[2];
-                righttarget[0] = board.GetPieces()[i].GetLocation()[0] - 1;
-                righttarget[1] = board.GetPieces()[i].GetLocation()[1] + 1;
-                if (IsAvailableAndLegal(righttarget))
-                {
-                    validMoves.Add(currPos, righttarget);
-                }
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                if (IsAvailableAndLegal(target))
+                    _validMoves.Add(currPos, target);
             }
         }
     }
@@ -282,32 +360,31 @@ public class GameController
     /// </summary>    
     private void FindSlidesRed()
     {
+        int[] currPos = new int[2];
+        int[] target = new int[2];
         //look through all pieces in the piece array.  
-        for (int i = 0; i < board.GetPieces().Length; i++)
+        for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
-            if (board.GetPieces()[i].GetColor() == playerColor)
+            if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                int[] currPos = new int[2];
-                currPos[0] = board.GetPieces()[i].GetLocation()[0];
-                currPos[1] = board.GetPieces()[i].GetLocation()[1];
+                currPos[0] = _board.GetPieces()[i].GetLocation()[0];
+                currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
                 //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is positive, left is pos, right is neg.) 
-                int[] lefttarget = new int[2];
-                lefttarget[0] = board.GetPieces()[i].GetLocation()[0] + 1;
-                lefttarget[1] = board.GetPieces()[i].GetLocation()[1] + 1;
-                if (IsAvailableAndLegal(lefttarget))
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                if (IsAvailableAndLegal(target))
                 {
-                    validMoves.Add(lefttarget, currPos);
+                    _validMoves.Add(target, currPos);
                 }
 
                 //If the space up and to the right is available and legal, add it to valid moves.
-                int[] righttarget = new int[2];
-                righttarget[0] = board.GetPieces()[i].GetLocation()[0] + 1;
-                righttarget[1] = board.GetPieces()[i].GetLocation()[1] - 1;
-                if (IsAvailableAndLegal(righttarget))
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                if (IsAvailableAndLegal(target))
                 {
-                    validMoves.Add(righttarget, currPos);
+                    _validMoves.Add(target, currPos);
                 }
             }
         }
@@ -324,10 +401,10 @@ public class GameController
             return false;
         }
         //If another piece is on the target square, it is not available.
-        for (int i = 0; i < board.GetPieces().Length; i++)
+        for (int i = 0; i < _board.GetPieces().Length; i++)
         {
-            if (board.GetPieces()[i].GetLocation()[0] == target[0] &&
-                board.GetPieces()[i].GetLocation()[1] == target[1])
+            if (_board.GetPieces()[i].GetLocation()[0] == target[0] &&
+                _board.GetPieces()[i].GetLocation()[1] == target[1])
             {
                 return false;
             }
