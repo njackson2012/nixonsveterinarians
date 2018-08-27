@@ -223,7 +223,7 @@ public class GameController
     /// </summary>    
     private void PlaceInAvailableTargets(ref Nullable<int>[,] availableTargets, int[] newTarget)
     {
-        for (int i = 0; i < availableTargets.Length; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (availableTargets[i, 0].HasValue)
             {
@@ -253,7 +253,7 @@ public class GameController
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
                 //re-initialize the array to Null each time.
-                for (int j = 0; j < availableTargets.Length; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     availableTargets[j, 0] = null;
                     availableTargets[j, 1] = null;
@@ -306,7 +306,7 @@ public class GameController
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
                 //re-initialize the array to Null each time.
-                for (int j = 0; j < availableTargets.Length; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     availableTargets[j, 0] = null;
                     availableTargets[j, 1] = null;
@@ -390,7 +390,7 @@ public class GameController
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
                 //re-initialize the array to Null each time.
-                for (int j = 0; j < availableTargets.Length; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     availableTargets[j, 0] = null;
                     availableTargets[j, 1] = null;
@@ -411,6 +411,7 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
+                Console.WriteLine(availableTargets[0, 0]);
                 if (availableTargets[0, 0].HasValue)
                     _validMoves.Add(currPos, availableTargets);
             }
@@ -435,7 +436,7 @@ public class GameController
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
                 //re-initialize the array to Null each time.
-                for (int j = 0; j < availableTargets.Length; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     availableTargets[j, 0] = null;
                     availableTargets[j, 1] = null;
