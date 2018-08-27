@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using Assets.Scripts;
 
 /// <summary>
 /// Controls the logic of a checkers game.
@@ -225,7 +226,7 @@ public class GameController
     {
         for (int i = 0; i < 4; i++)
         {
-            if (availableTargets[i, 0].HasValue)
+            if (!(availableTargets[i, 0].HasValue))
             {
                 availableTargets[i, 0] = newTarget[0];
                 availableTargets[i, 1] = newTarget[1];
@@ -281,7 +282,7 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if(availableTargets[0,0].HasValue)
-                    _validMoves.Add(currPos, availableTargets);
+                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
     }
@@ -334,7 +335,7 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0, 0].HasValue)
-                    _validMoves.Add(currPos, availableTargets);
+                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
     }
@@ -413,7 +414,7 @@ public class GameController
                 //If we have added any values, add the list to the hash table
                 Console.WriteLine(availableTargets[0, 0]);
                 if (availableTargets[0, 0].HasValue)
-                    _validMoves.Add(currPos, availableTargets);
+                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
     }
@@ -458,7 +459,8 @@ public class GameController
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0, 0].HasValue)
-                    _validMoves.Add(currPos, availableTargets);
+                    AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
+
             }
         }
     }
@@ -494,5 +496,21 @@ public class GameController
     {
         return true;
     }
-
+/*
+    public bool IsMoveValid(int[,] move)
+    {
+        FindValidMoves();
+        int[] start = new int[2];
+        start[0] = move[0];
+        int[] finish = new Int16[2];
+        move[1];
+        if()
+    }
+    */
+    private void AddToHashTable(int[] key, Nullable<int>[,] value)
+    {
+        DictValueArray dva = new DictValueArray(key);
+        _validMoves.Add(dva, value);
+    }
 }
+
