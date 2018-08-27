@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExitGame : MonoBehaviour {
+public class JoinGame : MonoBehaviour {
 
     public Sprite sprite1; // Drag your first sprite here
     public Sprite sprite2; // Drag your second sprite here
@@ -25,7 +25,7 @@ public class ExitGame : MonoBehaviour {
         {
             spriteRenderer.sprite = sprite2; // call method to change sprite
         }
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             spriteRenderer.sprite = sprite1; // call method to change sprite
         }
