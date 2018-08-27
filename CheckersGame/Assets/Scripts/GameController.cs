@@ -222,14 +222,14 @@ public class GameController
     /// <summary>
     /// Adds all possible jumps for the black player to validMoves.
     /// </summary>    
-    private void PlaceInAvailableTargets(ref Nullable<int>[,] availableTargets, int[] newTarget)
+    private void PlaceInAvailableTargets(ref int[] availableTargets, int[] newTarget)
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < availableTargets.Length; i++)
         {
-            if (!(availableTargets[i, 0].HasValue))
+            if (availableTargets[i] == -1)
             {
-                availableTargets[i, 0] = newTarget[0];
-                availableTargets[i, 1] = newTarget[1];
+                availableTargets[i] = newTarget[0];
+                availableTargets[i+1] = newTarget[1];
                 return;
             }
         }
@@ -244,21 +244,19 @@ public class GameController
         int[] currPos = new int[2];
         int[] target = new int[2];
         int[] enemy = new int[2];
-        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
-        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
-        Nullable<int>[,] availableTargets = new Nullable<int>[4,2];
+        //set up the data structure for the hastable's value entry.
+        //Need 8 entries, because the most moves a piece could make (King) is 4 and each move takes 2 ints to represent.
+        int[] availableTargets = new int[8];
         //look through all pieces in the piece array.
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                //re-initialize the array to Null each time.
-                for (int j = 0; j < 4; j++)
-                {
-                    availableTargets[j, 0] = null;
-                    availableTargets[j, 1] = null;
-                }
+                //re-initialize the array to -1 each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                    availableTargets[j] = -1;
+
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -281,7 +279,7 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
-                if(availableTargets[0,0].HasValue)
+                if(availableTargets[0] != -1)
                     AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
@@ -296,9 +294,9 @@ public class GameController
         int[] target = new int[2];
         int[] enemy = new int[2];
 
-        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
-        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
-        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+        //set up the data structure for the hastable's value entry.
+        //Need 8 entries, because the most moves a piece could make (King) is 4 and each move takes 2 ints to represent.
+        int[] availableTargets = new int[8];
 
         //look through all pieces in the piece array.
         for (int i = 0; i < _board.GetPieces().Length; i++)
@@ -306,12 +304,9 @@ public class GameController
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                //re-initialize the array to Null each time.
-                for (int j = 0; j < 4; j++)
-                {
-                    availableTargets[j, 0] = null;
-                    availableTargets[j, 1] = null;
-                }
+                //re-initialize the array to -1 each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                    availableTargets[j] = -1;
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -334,7 +329,7 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
-                if (availableTargets[0, 0].HasValue)
+                if (availableTargets[0] != -1)
                     AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
@@ -379,9 +374,9 @@ public class GameController
     {
         int[] currPos = new int[2];
         int[] target = new int[2];
-        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
-        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
-        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+        //set up the data structure for the hastable's value entry.
+        //Need 8 entries, because the most moves a piece could make (King) is 4 and each move takes 2 ints to represent.
+        int[] availableTargets = new int[8];
 
 
         //look through all pieces in the piece array.  
@@ -390,12 +385,10 @@ public class GameController
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                //re-initialize the array to Null each time.
-                for (int j = 0; j < 4; j++)
-                {
-                    availableTargets[j, 0] = null;
-                    availableTargets[j, 1] = null;
-                }
+                //re-initialize the array to -1 each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                    availableTargets[j] = -1;
+
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -412,8 +405,7 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
-                Console.WriteLine(availableTargets[0, 0]);
-                if (availableTargets[0, 0].HasValue)
+                if (availableTargets[0] != -1)
                     AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
             }
         }
@@ -426,9 +418,9 @@ public class GameController
     {
         int[] currPos = new int[2];
         int[] target = new int[2];
-        //set up the data structure for the hastable's value entry.  Needs to be nullable, so we can check whether a slot is full
-        //and fill it, if not.  Only need 4 entries, because the most moves a piece could make (King) is 4.
-        Nullable<int>[,] availableTargets = new Nullable<int>[4, 2];
+        //set up the data structure for the hastable's value entry.
+        //Need 8 entries, because the most moves a piece could make (King) is 4 and each move takes 2 ints to represent.
+        int[] availableTargets = new int[8];
 
         //look through all pieces in the piece array.  
         for (int i = 0; i < _board.GetPieces().Length; i++)
@@ -436,12 +428,10 @@ public class GameController
             //If their color matches the player's color, check for slides available to that piece.
             if (_board.GetPieces()[i].GetColor() == GetPlayerColor())
             {
-                //re-initialize the array to Null each time.
-                for (int j = 0; j < 4; j++)
-                {
-                    availableTargets[j, 0] = null;
-                    availableTargets[j, 1] = null;
-                }
+                //re-initialize the array to -1 each time.
+                for (int j = 0; j < availableTargets.Length; j++)
+                    availableTargets[j] = -1;
+
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
@@ -458,7 +448,7 @@ public class GameController
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If we have added any values, add the list to the hash table
-                if (availableTargets[0, 0].HasValue)
+                if (availableTargets[0] != -1)
                     AddToHashTable(currPos, availableTargets);//_validMoves.Add(currPos, availableTargets);/**/
 
             }
@@ -496,18 +486,28 @@ public class GameController
     {
         return true;
     }
-/*
+    //todo
     public bool IsMoveValid(int[,] move)
     {
         FindValidMoves();
         int[] start = new int[2];
-        start[0] = move[0];
-        int[] finish = new Int16[2];
-        move[1];
-        if()
+        int[] finish = new int[2];
+        for (int i = 0; i < 2; i++)
+        {
+            start[i] = move[0, i];
+            finish[i] = move[1, i];
+        }
+        DictValueArray startDva = new DictValueArray(start);
+
+        if (!_validMoves.ContainsKey(startDva))
+            return false;
+
+        Object validFinishes = _validMoves[startDva];
+        int[] vf = validFinishes as int[];
+        return false;//fake return//todo
     }
-    */
-    private void AddToHashTable(int[] key, Nullable<int>[,] value)
+
+    private void AddToHashTable(int[] key, int[] value)
     {
         DictValueArray dva = new DictValueArray(key);
         _validMoves.Add(dva, value);
