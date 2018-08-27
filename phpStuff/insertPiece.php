@@ -21,13 +21,17 @@
 	
 	if (is_null($pieceid)){
 		$query = "insert into pieces (GAMEID, LOCATION, COLOR, ISKING) values ((SELECT GAMEID from games where GAMEID = " . $gameid . "), " . $location . ", " . $color . ", " . $isking . ");";
-		$exitMessage = "Record created successfully";
 	} else {
 		$query = "update games set GAMEID = (select GAMEID from games where GAMEID = " . $gameid . "), LOCATION = " . $location . ", COLOR = " . $color . ", ISKING = " . $isking . " where PIECEID = " . $pieceid . ";";
-		$exitMessage = "Record updated successfully";
 	}
 	if ($conn->query($query) === TRUE) {
-		echo $exitMessage;
+		$query = "SELECT LAST_INSERT_ID();";
+		$result = conn->query($query);
+		if ($result === TRUE) {
+			echo $result;
+		} else {
+			echo "Error: " . $query . "<br>" . $conn->error;
+		}
 	} else {
 		echo "Error: " . $query . "<br>" . $conn->error;
 	}

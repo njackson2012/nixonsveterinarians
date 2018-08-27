@@ -57,6 +57,23 @@ public class Client : MonoBehaviour
         return gameTable.toArray();
     }
 
+    public int createGame(string startingColor)
+    {
+        WWW insertResult = new WWW(insertGameURL + "REQUESTSTATUS=\"Waiting4Player2Join\"&REQUESTSTATUS=NULL&PLAYERTURN=\"Black\"");
+        while (!insertResult.isDone)
+        {
+            Thread.Sleep(100);
+        }
+        string raw = insertResult.text;
+        int num;
+        if (int.TryParse(raw, out num))
+        {
+            return num;
+        }
+        // A return value of -1 implies an error
+        return -1;
+    }
+
     public string listDatbase()
     {
         WWW gameResults = new WWW(selectGameURL);
