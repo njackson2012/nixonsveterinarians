@@ -224,6 +224,7 @@ public class GameController
     /// </summary>    
     private void PlaceInAvailableTargets(ref int[] availableTargets, int[] newTarget)
     {
+        //loop through all evenly numbered entries.  If you find -1, place newTarget there.
         for (int i = 0; i < availableTargets.Length; i++)
         {
             if (availableTargets[i] == -1)
@@ -340,14 +341,13 @@ public class GameController
     /// </summary>    
     private bool HoldsOpponent(int[] target)
     {
+        //loop over all the pieces - checks whether any opponent piece is in the target location.
         for (int i = 0; i < _board.GetPieces().Length; i++)
         {
             if (_board.GetPieces()[i].GetColor() != GetPlayerColor() &&
                 _board.GetPieces()[i].GetLocation()[0] == target[0] &&
                 _board.GetPieces()[i].GetLocation()[1] == target[1])
-            {
                 return true;
-            }
         }
         return false;
     }
@@ -479,17 +479,27 @@ public class GameController
     }
 
     /// <summary>
-    /// Checks whether the piece is king at the end of its move.
+    /// Checks whether any of the valid moves results in a piece being kinged.
+    /// If so, returns true.  If not, returns false.
+    /// I'm not sure why we have this (Rob says).
     ///todo: NOT DONE YET
     /// </summary>    
     private bool IsNowKing()
     {
+        //If the player is red, then the
         return true;
     }
-    //todo
+
+
+    /// <summary>
+    /// Checks whether the piece is king at the end of its move.
+    ///todo: NOT DONE YET
+    /// </summary>    
     public bool IsMoveValid(int[,] move)
     {
+        //create hashtable of all valid moves (_validMoves)
         FindValidMoves();
+        //grab the starting position and finishing position of the argument move
         int[] start = new int[2];
         int[] finish = new int[2];
         for (int i = 0; i < 2; i++)
@@ -497,16 +507,34 @@ public class GameController
             start[i] = move[0, i];
             finish[i] = move[1, i];
         }
+        //convert start to the datastructure that the hash table needs
         DictValueArray startDva = new DictValueArray(start);
 
+        //If the key is not in the hashtable then the move is not valid
         if (!_validMoves.ContainsKey(startDva))
             return false;
 
-        Object validFinishes = _validMoves[startDva];
-        int[] vf = validFinishes as int[];
-        return false;//fake return//todo
+        //grab all the values (finishing positions of valid moves which start at the key) and convert to an int[]
+        Object validFinishesObject = _validMoves[startDva];
+        int[] validFinishes = validFinishesObject as int[];
+
+        //go through all finishing position values.
+        for (int i = 0; i < validFinishes.Length; i = i + 2)
+        {
+            //If we see a -1, the move is not valid
+            if (validFinishes[i] == -1)
+                return false;
+            //If we find the move, it is valid
+            if (validFinishes[i] == finish[i] && validFinishes[i + 1] == finish[i + 1])
+                return true;
+        }
+        //if we get through the whole list of valid moves and don't find our move, it is not valid.
+        return false;
     }
 
+    /// <summary>
+    /// Adds to Hashtable HT[key] = value.  
+    /// </summary>    
     private void AddToHashTable(int[] key, int[] value)
     {
         DictValueArray dva = new DictValueArray(key);
