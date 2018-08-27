@@ -51,6 +51,7 @@
     <Compile Include="BoardLogicUnitTest.cs" />
     <Compile Include="PieceLogicUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GameControllerUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

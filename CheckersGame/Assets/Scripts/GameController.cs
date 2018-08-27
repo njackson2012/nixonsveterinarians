@@ -13,7 +13,7 @@ public class GameController
     /// <summary>
     /// The entity though which GameController communicates with the GearHost Database.
     /// </summary>    
-    private Client _client;
+    private Client _client = new Client();
 
     /// <summary>
     /// The checkerboard on which the game is played.  Contains the pieces.
@@ -50,18 +50,25 @@ public class GameController
     /// <summary>
     /// A Hashtable of available moves.  
     /// </summary>    
-    private Hashtable _validMoves;
+    private Hashtable _validMoves = new Hashtable();
 
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
     ///////////////////////////////////////////////////////////////////
     /// <summary>
-    /// Constructor
+    /// Constructor - sets gameId, playerColor,  and board according to parameters.
+    /// Sets request status to None.  Still need to set Game Status, Player Turn, and Valid Moves
     /// </summary>
-    public GameController(int gameId, string playerColor)
+    public GameController(int gameId, string playerColor, BoardLogic board)
     {
-        this._playerColor = playerColor;
-        this._gameid = gameId;
+        if (playerColor.ToLower() == "red")
+            _playerColor = "Red";
+        else
+            _playerColor = "Black";
+
+        _gameid = gameId;
+        _board = board;
+        _requestStatus = "None";
     }
 
 
@@ -92,6 +99,15 @@ public class GameController
     public string GetGameStatus()
     {
         return _gameStatus;
+    }
+
+    /// <summary>
+    /// Get the game status.
+    /// Options are “Ongoing”, “Waiting4Player2Join”, “WaitingForRequest”, “BlackWon”, or “RedWon”.
+    /// </summary>    
+    public void SetGameStatus(string status)
+    {
+        _gameStatus = status;
     }
 
     /// <summary>
