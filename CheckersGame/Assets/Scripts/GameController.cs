@@ -154,11 +154,77 @@ public class GameController
 
     /// <summary>
     /// Adds all possible jumps to valid moves.
-    /// Todo: finish FindJumps.  
+    /// Todo: finish
     /// </summary>    
     private bool FindJumps()
     {
+        if (playerColor == "Black")
+        {
+            FindJumpsBlack();
+        }
+        else if (playerColor == "Red")
+        {
+            FindJumpsRed();
+        }
+        //if no moves are found, return false.  Otherwise, return true.
+        if (validMoves.Count == 0)
+        {
+            return false;
+        }
         return true;
+    }
+
+
+    /// <summary>
+    /// Adds all possible jumps for the black player to validMoves.
+    /// Todo: finish
+    /// </summary>    
+    private void FindJumpsBlack()
+    {
+        //look through all pieces in the piece array.  If their color matches the player's color, check for slides available to that piece.
+        for (int i = 0; i < board.GetPieces().Length; i++)
+        {
+            if (board.GetPieces()[i].GetColor() == playerColor)
+            {
+                int[] currPos = new int[2];
+                currPos[0] = board.GetPieces()[i].GetLocation()[0];
+                currPos[1] = board.GetPieces()[i].GetLocation()[1];
+
+                //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
+                //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
+                int[] lefttarget = new int[2];
+                lefttarget[0] = board.GetPieces()[i].GetLocation()[0] - 2;
+                lefttarget[1] = board.GetPieces()[i].GetLocation()[1] - 2;
+                int[] leftenemy = new int[2];
+                leftenemy[0] = board.GetPieces()[i].GetLocation()[0] - 1;
+                leftenemy[1] = board.GetPieces()[i].GetLocation()[1] - 1;
+
+/*                if (IsAvailableAndLegal(lefttarget) && HoldsOpponent(leftenemy))
+                {
+                    validMoves.Add(currPos, lefttarget);
+                }
+                */
+
+
+                //If the space up and to the right is available and legal, add it to valid moves.
+                int[] righttarget = new int[2];
+                righttarget[0] = board.GetPieces()[i].GetLocation()[0] - 1;
+                righttarget[1] = board.GetPieces()[i].GetLocation()[1] + 1;
+                if (IsAvailableAndLegal(righttarget))
+                {
+                    validMoves.Add(currPos, righttarget);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds all possible jumps for the red player to validMoves.
+    /// Todo: finish
+    /// </summary>    
+    private void FindJumpsRed()
+    {
+
     }
 
     /// <summary>
@@ -177,7 +243,7 @@ public class GameController
     }
 
     /// <summary>
-    /// Adds all possible slides to valid moves for black player.
+    /// Adds all possible slides for black player to valid moves.
     /// </summary>    
     private void FindSlidesBlack()
     {
@@ -196,7 +262,7 @@ public class GameController
                 lefttarget[1] = board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(lefttarget))
                 {
-                    validMoves.Add(lefttarget, currPos);
+                    validMoves.Add(currPos, lefttarget);
                 }
 
                 //If the space up and to the right is available and legal, add it to valid moves.
@@ -205,14 +271,14 @@ public class GameController
                 righttarget[1] = board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(righttarget))
                 {
-                    validMoves.Add(righttarget, currPos);
+                    validMoves.Add(currPos, righttarget);
                 }
             }
         }
     }
 
     /// <summary>
-    /// Adds all possible slides to valid moves for red player.
+    /// Adds all possible slides for red player to valid moves.
     /// </summary>    
     private void FindSlidesRed()
     {
