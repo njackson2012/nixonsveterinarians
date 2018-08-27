@@ -156,7 +156,7 @@ public class GameController
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
             string currPlayerTurn = GetClient().getGame(GetGameId())[4][0];
-            if (currPlayerTurn == this.GetPlayerTurn())
+            if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
             }
