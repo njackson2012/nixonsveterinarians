@@ -57,10 +57,11 @@ public class GameController : MonoBehaviour
     {
         print("Game Controller running");
         Client startClient = new Client();
-        string[,] myArray= new string[4, 1];
-        for (int i = 0; i < myArray.Length; i++)
+        HackshTable table = startClient.getGame(1);
+        foreach (string word in table.table.Keys)
         {
-            print(myArray[i, 0]);
+            print(word);
+            print(table.table["GameID"][0]);
         }
     }
 
@@ -82,7 +83,7 @@ public class GameController : MonoBehaviour
         _board = board;
         _requestStatus = "None";
         _playerTurn = "Black";
-//        _client = new Client();
+        _client = new Client();
     }
 
 
@@ -178,7 +179,8 @@ public class GameController : MonoBehaviour
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
-            string currPlayerTurn = _client.getGame(GetGameId())[4][0];
+            HackshTable myTable = this._client.getGame(GetGameId());
+            string currPlayerTurn = myTable.table["Turn"][0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
@@ -186,7 +188,7 @@ public class GameController : MonoBehaviour
             Thread.Sleep(200);
         }
     }
-
+    
     /// <summary>
     /// Changes player turn from "Red" to "Black" or from "Black" to "Red".
     /// </summary>    
