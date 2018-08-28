@@ -6,12 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    public static Menu Instance { set; get; }   
+    public static Menu Instance { set; get; }
 
-    //public InputField nameInput;
+    public InputField createGameNameInput;
+    public InputField joinGameNameInput;
     public GameObject mainMenuButtons;
     public GameObject newGamePanel;
     public GameObject joinGamePanel;
+    public Dropdown createGameCheckerColor;
 
     // runs when application starts
     private void Start()
@@ -32,10 +34,11 @@ public class Menu : MonoBehaviour
     //clicked the join game confirm button
     public void JoinGameConfirmButton()
     {
-        SceneManager.LoadScene("Game");
+        string name = joinGameNameInput.text;
+        Debug.Log(name + " joined");
     }
 
-    //clicked the join gam's back button
+    //clicked the join game's back button
     public void JoinGameCancelButton()
     {
         mainMenuButtons.SetActive(true);
@@ -52,7 +55,9 @@ public class Menu : MonoBehaviour
     //clicked the new game confirm button
     public void NewGameConfirmButton()
     {
-        SceneManager.LoadScene("Game");
+        string name = createGameNameInput.text;
+        string color = createGameCheckerColor.itemText.text;
+        Debug.Log(name + " created");
     }
 
     //clicked the new game's back button
