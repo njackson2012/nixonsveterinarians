@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Threading;
 using Assets.Scripts;
+using UnityEngine;
 
 /// <summary>
 /// Controls the logic of a checkers game.
 /// </summary>    
-public class GameController
+public class GameController : MonoBehaviour
 {
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Attributes ///////////////////////////
@@ -49,6 +50,14 @@ public class GameController
     /// </summary>    
     private Hashtable _validMoves = new Hashtable();
 
+    private Client _client;
+
+
+    void Start()
+    {
+        print("Game Controller running");
+    }
+
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
     ///////////////////////////////////////////////////////////////////
@@ -66,6 +75,7 @@ public class GameController
         _gameid = gameId;
         _board = board;
         _requestStatus = "None";
+        _client = new Client();
     }
 
 
@@ -161,7 +171,7 @@ public class GameController
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
-            string currPlayerTurn = Client.getGame(GetGameId())[4][0];
+            string currPlayerTurn = _client.getGame(GetGameId())[4][0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
@@ -533,7 +543,7 @@ public class GameController
             return false;
 
         //grab all the values (finishing positions of valid moves which start at the key) and convert to an int[]
-        Object validFinishesObject = _validMoves[startDva];
+        System.Object validFinishesObject = _validMoves[startDva];
         int[] validFinishes = validFinishesObject as int[];
 
         //go through all finishing position values.
@@ -557,6 +567,12 @@ public class GameController
     {
         DictValueArray dva = new DictValueArray(key);
         _validMoves.Add(dva, value);
+    }
+
+    // Update is called once per frame 
+    void Update()
+    {
+
     }
 }
 
