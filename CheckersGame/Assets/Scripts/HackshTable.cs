@@ -23,6 +23,21 @@ namespace Assets.Scripts
         {
             table = new Dictionary<string, string[]>();
         }
+        public string[] getKeys()
+        {
+            string[] keys = new string[5];
+            int i = 0;
+            foreach(string key in this.table.Keys)
+            {
+                keys[i] = key;
+                i++;
+            }
+            return keys;
+        }
+        public string[] get(string key)
+        {
+            return this.table[key];
+        }
         public void add(string key, string word)
         {
             if(!table.ContainsKey(key))

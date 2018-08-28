@@ -15,7 +15,7 @@
 	$searchValue = $_GET['SEARCHVALUE'];
 	
 	if (is_null($searchType)) {
-		$query = "select * from pieces;"
+		$query = "select * from pieces;";
 	} else {
 		$query = "select * from pieces where " . $searchType . " = " . $searchValue . ";";
 	}

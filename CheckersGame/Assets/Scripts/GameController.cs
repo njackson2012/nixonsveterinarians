@@ -58,10 +58,10 @@ public class GameController : MonoBehaviour
         print("Game Controller running");
         Client startClient = new Client();
         HackshTable table = startClient.getGame(1);
-        foreach (string word in table.table.Keys)
+        foreach (string word in table.getKeys())
         {
             print(word);
-            print(table.table["GameID"][0]);
+            print(table.get("GameID")[0]);
         }
     }
 

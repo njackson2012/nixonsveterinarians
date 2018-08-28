@@ -26,9 +26,9 @@ public class Client : MonoBehaviour //commented out because not unity UI class
         // If not, abort game. Maybe a ping endpoint could be established.
     }
     
-    public string[][] getGame(int ID)
+    public HackshTable getGame(int ID)
     {
-        WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMEID\"&SEARCHVALUE=" + ID);
+        WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=GAMEID&SEARCHVALUE=" + ID);
         while(! selectResult.isDone)
         {
             Thread.Sleep(100);
@@ -38,12 +38,12 @@ public class Client : MonoBehaviour //commented out because not unity UI class
         HackshTable gameTable = new HackshTable();
         gameTable.generateFromRaw(gameRaw);
 
-        return gameTable.toArray();
+        return gameTable;
     }
 
-    public string[][] findOpenGames()
+    public HackshTable findOpenGames()
     {
-        WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMESTATUS\"&SEARCHVALUE=\"Waiting4Player2Join\"");
+        WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=GAMESTATUS&SEARCHVALUE=\"Waiting4Player2Join\"");
         while(! selectResult.isDone)
         {
             Thread.Sleep(100);
@@ -54,12 +54,12 @@ public class Client : MonoBehaviour //commented out because not unity UI class
         HackshTable gameTable = new HackshTable();
         gameTable.generateFromRaw(gameRaw);
 
-        return gameTable.toArray();
+        return gameTable;
     }
 
     public int createGame(string startingColor)
     {
-        WWW insertResult = new WWW(insertGameURL + "REQUESTSTATUS=\"Waiting4Player2Join\"&REQUESTSTATUS=NULL&PLAYERTURN=\"Black\"");
+        WWW insertResult = new WWW(insertGameURL + "REQUESTSTATUS=\"Waiting4Player2Join\"&REQUESTSTATUS=NULL&PLAYERTURN=\"" + startingColor + "\"");
         while (!insertResult.isDone)
         {
             Thread.Sleep(100);
