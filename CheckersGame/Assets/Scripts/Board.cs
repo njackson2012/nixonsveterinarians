@@ -20,6 +20,9 @@ public class Board : MonoBehaviour {
     private Vector2 startDrag;
     private Vector3 endDrag;
 
+    public GameObject concedeGamePanel;
+    public GameObject requestDrawGamePanel;
+    public GameObject exitGamePanel;
 
     private void UpdateMouseOver()
     {
@@ -161,7 +164,10 @@ public class Board : MonoBehaviour {
 	void Start ()
     {
         GenerateBoard();
-	}
+        concedeGamePanel.SetActive(false);
+        requestDrawGamePanel.SetActive(false);
+        exitGamePanel.SetActive(false);
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -183,5 +189,65 @@ public class Board : MonoBehaviour {
             }
         }
 	}
+
+
+
+    //                  //
+    //      BUTTONS     //
+    //                  //
+
+    //clicked the concede button
+    public void ConcedeButton()
+    {
+        concedeGamePanel.SetActive(true);
+    }
+
+    //clicked the concede button's confirm
+    public void ConcedeButtonConfirm()
+    {
+        Debug.Log("Conceded");
+    }
+
+    //clicked the concede button's cancel
+    public void ConcedeButtonCancel()
+    {
+        concedeGamePanel.SetActive(false);
+    }
+
+    //clicked the request draw button
+    public void RequestDrawButton()
+    {
+        requestDrawGamePanel.SetActive(true);
+    }
+
+    //clicked the request draw button's confirm
+    public void RequestDrawButtonConfirm()
+    {
+        Debug.Log("requesting Draw");
+    }
+
+    //clicked the request draw button's cancel
+    public void RequestDrawButtonCancel()
+    {
+        requestDrawGamePanel.SetActive(false);
+    }
+
+    //clicked the Exit To Main Menu button
+    public void ExitToMainMenuButton()
+    {
+        exitGamePanel.SetActive(true);
+    }
+
+    //clicked the Exit To Main Menu button
+    public void ExitToMainMenuButtonConfirm()
+    {
+        Debug.Log("Exiting");
+    }
+
+    //clicked the Exit To Main Menu button
+    public void ExitToMainMenuButtonCancel()
+    {
+        exitGamePanel.SetActive(false);
+    }
 
 }

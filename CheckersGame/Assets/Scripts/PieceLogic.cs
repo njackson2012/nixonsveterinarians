@@ -13,24 +13,24 @@ public class PieceLogic {
     /// <summary>
     /// A unique id for each checker.  (0-23)
     /// </summary>
-    private int id;
+    private int _id;
 
     /// <summary>
     /// The row, column location (0-7) of the piece.  Row 0 is the
     /// closest row to the red side.  Row 7 is the closest row to the
     /// black side.  Columns increase from left to right from Black's perspective.
     /// </summary>
-    private int[] location = new int[2];
+    private int[] _location = new int[2];
 
     /// <summary>
     /// The piece's color.  Can be red or black.
     /// </summary>
-    private string color;
+    private string _color;
 
     /// <summary>
     /// True if a piece is a king.  False otherwise.
     /// </summary>
-    private bool king;
+    private bool _king;
 
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
@@ -40,10 +40,10 @@ public class PieceLogic {
     /// </summary>
     public PieceLogic(int id, string color)
     {
-        this.id = id;
-        this.color = color;
-        this.king = false;
-        this.location = new int[] { -1, -1 };
+        _id = id;
+        _color = color;
+        _king = false;
+        _location = new int[] { -1, -1 };
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ public class PieceLogic {
     /// </summary>
     public int GetId()
     {
-        return id;
+        return _id;
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class PieceLogic {
     /// </summary>
     public int[] GetLocation()
     {
-        return location;
+        return _location;
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class PieceLogic {
     /// </summary>
     public void SetLocation(int[] loc)
     {
-        location = loc;
+        _location = loc;
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class PieceLogic {
     /// </summary>
     public string GetColor()
     {
-        return color;
+        return _color;
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class PieceLogic {
     /// </summary>
     public bool IsKing()
     {
-        return king;
+        return _king;
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ public class PieceLogic {
     /// </summary>
     public void KingMe()
     {
-        king = true;
+        _king = true;
     }
 
 }

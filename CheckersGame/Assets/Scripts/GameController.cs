@@ -556,15 +556,17 @@ public class GameController : MonoBehaviour
         int[] validFinishes = validFinishesObject as int[];
 
         //go through all finishing position values.
-        for (int i = 0; i < validFinishes.Length; i = i + 2)
-        {
-            //If we see a -1, the move is not valid
-            if (validFinishes[i] == -1)
-                return false;
-            //If we find the move, it is valid
-            if (validFinishes[i] == finish[0] && validFinishes[i + 1] == finish[1])
-                return true;
-        }
+        if (validFinishes != null)
+            for (int i = 0; i < validFinishes.Length; i = i + 2)
+            {
+                //If we see a -1, the move is not valid
+                if (validFinishes[i] == -1)
+                    return false;
+                //If we find the move, it is valid
+                if (validFinishes[i] == finish[0] && validFinishes[i + 1] == finish[1])
+                    return true;
+            }
+
         //if we get through the whole list of valid moves and don't find our move, it is not valid.
         return false;
     }

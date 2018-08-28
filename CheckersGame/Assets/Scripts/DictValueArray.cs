@@ -7,18 +7,18 @@ namespace Assets.Scripts
 {
     class DictValueArray : IEquatable<DictValueArray>
     {
-        public int row;
-        public int column;
+        public int Row;
+        public int Column;
 
         public DictValueArray(int[] key)
         {
-            this.row = key[0];
-            this.column = key[1];
+            this.Row = key[0];
+            this.Column = key[1];
         }
 
         public override int GetHashCode()
         {
-            return (row * 10) + column;
+            return (Row * 10) + Column;
         }
 
         public override bool Equals(object obj)
@@ -28,9 +28,7 @@ namespace Assets.Scripts
 
         public bool Equals(DictValueArray dva)
         {
-            if (this.row == dva.row && this.column == dva.column)
-                return true;
-            return false;
+            return dva != null && (this.Row == dva.Row && Column == dva.Column);
         }
     }
 }
