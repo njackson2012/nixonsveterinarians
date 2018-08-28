@@ -4,7 +4,7 @@ using System.Threading;
 using UnityEngine;
 using Assets.Scripts;
 
-public static class Client// : MonoBehaviour //commented out because not unity UI class
+public class Client : MonoBehaviour //commented out because not unity UI class
 {
     // PHP endpoint URLS for Game management
     public static string insertGameURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/insertGame.php?";
@@ -19,14 +19,14 @@ public static class Client// : MonoBehaviour //commented out because not unity U
     // The URL below is for a test script. I doubt I'll ever need it again, but I don't want to delelte it yet.
     // public string helloWorldURL = "http://nixonphpconnector.gearhostpreview.com/phpStuff/helloWorld.php";
     // Use this for initialization
-/*    void Start()
+    void Start()
     {
         print("Client running");
         // TODO: add a check to determine if connected to the database on strart. 
         // If not, abort game. Maybe a ping endpoint could be established.
     }
-    */
-    public static string[][] getGame(int ID)
+    
+    public string[][] getGame(int ID)
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMEID\"&SEARCHVALUE=" + ID);
         while(! selectResult.isDone)
@@ -41,7 +41,7 @@ public static class Client// : MonoBehaviour //commented out because not unity U
         return gameTable.toArray();
     }
 
-    public static string[][] findOpenGames()
+    public string[][] findOpenGames()
     {
         WWW selectResult = new WWW(selectGameURL + "SEARCHTYPE=\"GAMESTATUS\"&SEARCHVALUE=\"Waiting4Player2Join\"");
         while(! selectResult.isDone)
@@ -57,7 +57,7 @@ public static class Client// : MonoBehaviour //commented out because not unity U
         return gameTable.toArray();
     }
 
-    public static int createGame(string startingColor)
+    public int createGame(string startingColor)
     {
         WWW insertResult = new WWW(insertGameURL + "REQUESTSTATUS=\"Waiting4Player2Join\"&REQUESTSTATUS=NULL&PLAYERTURN=\"Black\"");
         while (!insertResult.isDone)
@@ -74,7 +74,7 @@ public static class Client// : MonoBehaviour //commented out because not unity U
         return -1;
     }
 
-    public static string listDatbase()
+    public string listDatbase()
     {
         WWW gameResults = new WWW(selectGameURL);
         while(! gameResults.isDone)
@@ -103,11 +103,11 @@ public static class Client// : MonoBehaviour //commented out because not unity U
         
         return formatted;
     }
-/*
-    // Update is called once per frame
+
+    // Update is called once per frame 
     void Update()
     {
 
     }
-    */
+    
 }

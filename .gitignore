@@ -5,3 +5,4 @@ CheckersGame/obj/*
 CheckersGame/*.csproj
 UnitTests/obj/*
 *~
+CheckersGame/Assembly-CSharp.csproj
