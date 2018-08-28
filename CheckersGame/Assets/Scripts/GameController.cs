@@ -180,7 +180,7 @@ public class GameController : MonoBehaviour
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
             HackshTable myTable = this._client.getGame(GetGameId());
-            string currPlayerTurn = myTable.table["Turn"][0];
+            string currPlayerTurn = myTable.get("Turn")[0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
