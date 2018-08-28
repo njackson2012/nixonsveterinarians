@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Controls the logic of a checkers game.
 /// </summary>    
-public class GameController : MonoBehaviour
+public class GameController
 {
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Attributes ///////////////////////////
@@ -46,24 +46,19 @@ public class GameController : MonoBehaviour
     private string _playerColor;
 
     /// <summary>
+    /// Flag to alert if jump is there
+    /// </summary> 
+    private bool _continuedTurn; 
+    
+    /// <summary>
     /// A Hashtable of available moves.  
     /// </summary>    
     private Hashtable _validMoves = new Hashtable();
 
-    private Client _client = new Client();
+    //private Client _client = new Client();
 
 
-    void Start()
-    {
-        print("Game Controller running");
-        Client startClient = new Client();
-        HackshTable table = startClient.getGame(1);
-        foreach (string word in table.getKeys())
-        {
-            print(word);
-            print(table.get("GameID")[0]);
-        }
-    }
+
 
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
@@ -72,7 +67,7 @@ public class GameController : MonoBehaviour
     /// Constructor - sets gameId, playerColor,  and board according to parameters.
     /// Sets request status to None.  Still need to set Game Status, Player Turn, and Valid Moves
     /// </summary>
-    public GameController(int gameId, string playerColor, BoardLogic board)
+    public GameController(int gameId, string playerColor)
     {
         if (playerColor.ToLower() == "red")
             _playerColor = "Red";
@@ -80,10 +75,25 @@ public class GameController : MonoBehaviour
             _playerColor = "Black";
 
         _gameid = gameId;
-        _board = board;
         _requestStatus = "None";
         _playerTurn = "Black";
-        _client = new Client();
+
+        // initialize the pieces
+        int[,] initialLocations = new int[24, 2] { {0,0}, {0,2}, {0,4}, {0,6}, {1,1}, {1,3}
+           , {1,5}, {1,7}, {2,0}, {2,2}, {2,4}, {2,6}, {5,1}, {5,3}, {5,5}, {5,7}, {6,0}, {6,2}, {6,4}, {6,6}, {7,1}, {7,3}, {7,5}, {7,7} };
+       PieceLogic[] initialPieces = new PieceLogic[24];
+        for (int i = 0; i < 12; i++)
+        {
+            initialPieces[i] = new PieceLogic(i, "Black");
+            initialPieces[i].SetLocation(new int[] { initialLocations[i, 0], initialLocations[i, 1] });
+            initialPieces[i + 12] = new PieceLogic(i + 12, "Red");
+            initialPieces[i + 12].SetLocation(new int[] { initialLocations[i + 12, 0], initialLocations[i + 12, 1] });
+        }
+
+        _board = new BoardLogic(initialPieces);
+
+
+        //  _client = new Client();
     }
 
 
@@ -145,9 +155,9 @@ public class GameController : MonoBehaviour
     /// <summary>
     /// Set the player turn.  Options are "Red" or "Black".   
     /// </summary>    
-    public void SetPlayerTurn(string playerTurn)
+    public void SetPlayerColor(string playerColor)
     {
-        this._playerTurn = playerTurn;
+        this._playerColor = playerColor;
     }
 
     /// <summary>
@@ -156,6 +166,14 @@ public class GameController : MonoBehaviour
     public string GetPlayerTurn()
     {
         return _playerTurn;
+    }
+
+    /// <summary>
+    /// Get the second turn value  
+    /// </summary>    
+    public bool HasContinuedTurn()
+    {
+        return _continuedTurn;
     }
 
     /// <summary>
@@ -174,13 +192,14 @@ public class GameController : MonoBehaviour
     /// Queries database every 0.2 seconds.  When it is the player's turn, returns true.
     /// Does not return until then.  Never returns false.
     /// </summary>    
+    /*
     public bool IsMyTurn()
     {
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
             HackshTable myTable = this._client.getGame(GetGameId());
-            string currPlayerTurn = myTable.table["Turn"][0];
+            string currPlayerTurn = myTable.get("Turn")[0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
@@ -188,16 +207,102 @@ public class GameController : MonoBehaviour
             Thread.Sleep(200);
         }
     }
-    
+    */
+
+    /// <summary>
+    /// Finds the piece at the given location
+    /// </summary>    
+    public PieceLogic FindPiece(int x, int y)
+    {
+        for (int i = 0; i < _board.GetPieces().Length; i++)
+        {
+            if (_board.GetPieces()[i].GetLocation()[0] == x)
+            {
+                if (_board.GetPieces()[i].GetLocation()[1] == y)
+                {
+                    return _board.GetPieces()[i];
+                }
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Changes player turn from "Red" to "Black" or from "Black" to "Red".
     /// </summary>    
     public void SwitchTurn()
     {
-        if (GetPlayerTurn() == "Red")
-            SetPlayerTurn("Black");
-        else if (GetPlayerTurn() == "Black")
-            SetPlayerTurn("Red");
+        if (GetPlayerColor() == "Red")
+            SetPlayerColor("Black");
+        else if (GetPlayerColor() == "Black")
+            SetPlayerColor("Red");
+    }
+
+    /// <summary>
+    /// Returns a string that matches the color who won.     
+    /// </summary>    
+    public string WhoWon()
+    {
+        string prev_color = GetPlayerColor();
+        //remove previous valid moves
+        _validMoves.Clear();
+
+        //if black lost (so red won), return "Red".
+        SetPlayerColor("Black");
+        if (!FindJumps())
+        {
+            FindSlides();
+        }
+        //Debug.Log(_validMoves.Count);
+        //Debug.Log(_validMoves.Count);
+        if (_validMoves.Count == 0)
+        {
+            SetPlayerColor(prev_color);
+            return "Red";
+        }
+            
+        //remove previous valid moves
+        _validMoves.Clear();
+
+        SetPlayerColor("Red");
+        //if red lost (so black won), return "Black".
+        if (!FindJumps())
+        {
+            FindSlides();
+        }
+        if (_validMoves.Count == 0)
+        {
+            SetPlayerColor(prev_color);
+            return "Black";
+        }
+
+        SetPlayerColor(prev_color);
+        //if no one won, return "No One"
+        return "NoOne";
+    }
+
+    /// <summary>
+    /// Moves a piece.  Kings the piece if appropriate.  Updates Pieces.  Does not error check.  
+    ///(IsMoveValid must be called before to validate move.)   
+    /// </summary>    
+    public void MakeMove(int[,] move)
+    {
+        int[] start = new int[] { move[0,0], move[0,1] };
+        int[] finish = new int[] { move[1,0], move[1,1] };
+
+        for (int i = 0; i < _board.GetPieces().Length; i++)
+        {
+            if (_board.GetPieces()[i].GetLocation()[0] == start[0] && _board.GetPieces()[i].GetLocation()[1] == start[1])
+            {
+                _board.GetPieces()[i].SetLocation(finish);
+                _board.GetPieces()[i].WillBecomeKing();
+            }
+            if (start[0] - finish[0] == 2 || start[0] - finish[0] == -2)
+            {
+                if (_board.GetPieces()[i].GetLocation()[0] == (start[0] + finish[0]) / 2 && _board.GetPieces()[i].GetLocation()[1] == (start[1] + finish[1]) / 2)
+                    _board.GetPieces()[i].SetLocation(new int[] { -1, -1 });
+            }
+        }
     }
 
     /// <summary>
@@ -207,6 +312,7 @@ public class GameController : MonoBehaviour
     {
         //remove previous valid moves
         _validMoves.Clear();
+        _continuedTurn = false;
 
         //if there are no jumps, then add slides to validMoves.  If there are jumps, they will automatically be added to validMoves
         //and no slide will be valid.  (A rule of checkers - if you can jump, you have to.)
@@ -234,6 +340,8 @@ public class GameController : MonoBehaviour
         {
             return false;
         }
+
+        _continuedTurn = true;
         return true;
     }
 
@@ -249,7 +357,7 @@ public class GameController : MonoBehaviour
             if (availableTargets[i] == -1)
             {
                 availableTargets[i] = newTarget[0];
-                availableTargets[i+1] = newTarget[1];
+                availableTargets[i + 1] = newTarget[1];
                 return;
             }
         }
@@ -279,7 +387,8 @@ public class GameController : MonoBehaviour
 
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
-
+                if (currPos[0] == -1 && currPos[1] == -1)
+                    continue;
                 //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
                 //add the jump to valid moves.  (NOTE: for Black, up is positive, right is pos.) 
                 target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
@@ -297,6 +406,28 @@ public class GameController : MonoBehaviour
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
+
+                if (_board.GetPieces()[i].IsKing())
+                {
+                    //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
+                    //add the jump to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
+                    enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                    enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                    if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+
+                    //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
+                    //add the jump to valid moves.  (NOTE: for Red, up is neg, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
+                    enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                    enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                    if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+                }
+
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
@@ -333,7 +464,8 @@ public class GameController : MonoBehaviour
                     availableTargets[j] = -1;
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
-
+                if (currPos[0] == -1 && currPos[1] == -1)
+                    continue;
                 //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
                 //add the jump to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
                 target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
@@ -352,7 +484,29 @@ public class GameController : MonoBehaviour
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
+                if (_board.GetPieces()[i].IsKing())
+                {
+                    //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
+                    //add the jump to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
+                    enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                    enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                    if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+
+                    //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
+                    //add the jump to valid moves.  (NOTE: for Red, up is neg, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
+                    enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                    enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                    if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+                }
+
                 //If we have added any values, add the list to the hash table
+
                 if (availableTargets[0] != -1)
                 {
                     int[] nonRefAvailTargets = new int[8];
@@ -394,6 +548,22 @@ public class GameController : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// A piece becomes a king if it reaches the enemy's side.   
+    /// </summary>    
+    public void BecomeKing(PieceLogic piece)
+    {
+        if (piece.GetColor() == "Red" && piece.GetLocation()[0] == 0)
+        {
+            piece.KingMe();
+        }
+        if (piece.GetColor() == "Black" && piece.GetLocation()[0] == 7)
+        {
+            piece.KingMe();
+        }
+    }
+
     /// <summary>
     /// Adds all possible slides for black player to valid moves.
     /// </summary>    
@@ -418,7 +588,8 @@ public class GameController : MonoBehaviour
 
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
-
+                if (currPos[0] == -1 && currPos[1] == -1)
+                    continue;
                 //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Black, up is positive, left is neg, right is pos.) 
                 target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
@@ -431,11 +602,26 @@ public class GameController : MonoBehaviour
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
+                if (_board.GetPieces()[i].IsKing())
+                {
+                    //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                    if (IsAvailableAndLegal(target))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+
+                    //If the space up and to the right is available and legal, add it to valid moves.
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                    if (IsAvailableAndLegal(target))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+                }
+
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
                 {
                     int[] nonRefAvailTargets = new int[8];
-                    availableTargets.CopyTo(nonRefAvailTargets,0);
+                    availableTargets.CopyTo(nonRefAvailTargets, 0);
                     AddToHashTable(currPos, nonRefAvailTargets);//_validMoves.Add(currPos, availableTargets);/**/
                 }
             }
@@ -465,7 +651,8 @@ public class GameController : MonoBehaviour
 
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
-
+                if (currPos[0] == -1 && currPos[1] == -1)
+                    continue;
                 //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
                 target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
@@ -477,6 +664,21 @@ public class GameController : MonoBehaviour
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
+
+                if (_board.GetPieces()[i].IsKing())
+                {
+                    //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
+                    if (IsAvailableAndLegal(target))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+
+                    //If the space up and to the right is available and legal, add it to valid moves.
+                    target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                    target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
+                    if (IsAvailableAndLegal(target))
+                        PlaceInAvailableTargets(ref availableTargets, target);
+                }
 
                 //If we have added any values, add the list to the hash table
                 if (availableTargets[0] != -1)
@@ -556,15 +758,17 @@ public class GameController : MonoBehaviour
         int[] validFinishes = validFinishesObject as int[];
 
         //go through all finishing position values.
-        for (int i = 0; i < validFinishes.Length; i = i + 2)
-        {
-            //If we see a -1, the move is not valid
-            if (validFinishes[i] == -1)
-                return false;
-            //If we find the move, it is valid
-            if (validFinishes[i] == finish[0] && validFinishes[i + 1] == finish[1])
-                return true;
-        }
+        if (validFinishes != null)
+            for (int i = 0; i < validFinishes.Length; i = i + 2)
+            {
+                //If we see a -1, the move is not valid
+                if (validFinishes[i] == -1)
+                    return false;
+                //If we find the move, it is valid
+                if (validFinishes[i] == finish[0] && validFinishes[i + 1] == finish[1])
+                    return true;
+            }
+
         //if we get through the whole list of valid moves and don't find our move, it is not valid.
         return false;
     }
