@@ -15,7 +15,7 @@
 	$searchValue = $_GET['SEARCHVALUE'];
 	
 	if (is_null($searchType)) {
-		$query = "select * from games;"
+		$query = "select * from games;";
 	} else {
 		$query = "select * from games where " . $searchType . " = " . $searchValue . ";";
 	}
