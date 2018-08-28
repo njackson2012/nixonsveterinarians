@@ -100,4 +100,18 @@ public class PieceLogic {
         king = true;
     }
 
+    /// <summary>
+    /// Checks whether a piece has become a king.   
+    /// </summary>    
+    public void WillBecomeKing()
+    {
+        if (this.GetColor() == "Red" && this.GetLocation()[0] == 0)
+        {
+            this.KingMe();
+        }
+        if (this.GetColor() == "Black" && this.GetLocation()[0] == 7)
+        {
+            this.KingMe();
+        }
+    }
 }

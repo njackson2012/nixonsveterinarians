@@ -32,7 +32,7 @@ public class Menu : MonoBehaviour
     //clicked the join game confirm button
     public void JoinGameConfirmButton()
     {
-        Debug.Log("joined");
+        SceneManager.LoadScene("Game");
     }
 
     //clicked the join gam's back button
@@ -52,7 +52,7 @@ public class Menu : MonoBehaviour
     //clicked the new game confirm button
     public void NewGameConfirmButton()
     {
-        Debug.Log("created");
+        SceneManager.LoadScene("Game");
     }
 
     //clicked the new game's back button
