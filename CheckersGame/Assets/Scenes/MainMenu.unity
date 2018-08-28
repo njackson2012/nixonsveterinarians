@@ -2700,7 +2700,7 @@ GameObject:
   - component: {fileID: 1407964234}
   - component: {fileID: 1407964233}
   m_Layer: 5
-  m_Name: MenuButtons
+  m_Name: MenuButtonsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3911,9 +3911,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5db03448b1cdd438e77014b59d947f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  createGameNameInput: {fileID: 771425708}
+  joinGameNameInput: {fileID: 91590840}
   mainMenuButtons: {fileID: 1407964231}
   newGamePanel: {fileID: 1015560071}
   joinGamePanel: {fileID: 345095872}
+  createGameCheckerColor: {fileID: 1687873284}
 --- !u!4 &2091150679
 Transform:
   m_ObjectHideFlags: 0

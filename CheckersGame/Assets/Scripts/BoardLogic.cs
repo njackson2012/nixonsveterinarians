@@ -14,7 +14,7 @@ public class BoardLogic {
     /// <summary>
     /// Array containing all pieces on the board.
     /// </summary>
-    private PieceLogic[] pieces = new PieceLogic[24];
+    private PieceLogic[] _pieces = new PieceLogic[24];
 
 
     ///////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ public class BoardLogic {
     /// </summary>
     public BoardLogic(PieceLogic[] ps)
     {
-        this.pieces = ps;
+        this._pieces = ps;
     }
 
 
@@ -37,7 +37,7 @@ public class BoardLogic {
     /// </summary>
     public PieceLogic[] GetPieces()
     {
-        return pieces;
+        return _pieces;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class BoardLogic {
     /// </summary>
     public void SetPieces(PieceLogic[] ps)
     {
-        this.pieces = ps;
+        this._pieces = ps;
     }
 
 
@@ -57,11 +57,11 @@ public class BoardLogic {
     /// </summary>    
     public void RemovePiece(int pieceId)
     {
-        for (int i = 0; i < pieces.Length; i++)
+        for (int i = 0; i < _pieces.Length; i++)
         {
-            if (pieces[i].GetId() == pieceId)
+            if (_pieces[i].GetId() == pieceId)
             {
-                pieces[i].SetLocation(new int[] { -1, -1 });
+                _pieces[i].SetLocation(new int[] { -1, -1 });
             }
         }
     }
