@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Threading;
 using Assets.Scripts;
+using UnityEngine;
 
 /// <summary>
 /// Controls the logic of a checkers game.
 /// </summary>    
-public class GameController
+public class GameController : MonoBehaviour
 {
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Attributes ///////////////////////////
@@ -49,6 +50,20 @@ public class GameController
     /// </summary>    
     private Hashtable _validMoves = new Hashtable();
 
+    private Client _client = new Client();
+
+
+    void Start()
+    {
+        print("Game Controller running");
+        Client startClient = new Client();
+        string[,] myArray= new string[4, 1];
+        for (int i = 0; i < myArray.Length; i++)
+        {
+            print(myArray[i, 0]);
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////
     //////////////////////////// Constructor //////////////////////////
     ///////////////////////////////////////////////////////////////////
@@ -66,6 +81,8 @@ public class GameController
         _gameid = gameId;
         _board = board;
         _requestStatus = "None";
+        _playerTurn = "Black";
+//        _client = new Client();
     }
 
 
@@ -161,7 +178,7 @@ public class GameController
         while (true)
         {
             //Query database for whose turn it is: Nick - how do I get whose turn it is from the database?
-            string currPlayerTurn = Client.getGame(GetGameId())[4][0];
+            string currPlayerTurn = _client.getGame(GetGameId())[4][0];
             if (currPlayerTurn == this.GetPlayerColor())
             {
                 return true;
@@ -262,19 +279,19 @@ public class GameController
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
                 //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
-                //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                //add the jump to valid moves.  (NOTE: for Black, up is positive, right is pos.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
-                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
-                //add the jump to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
+                //add the jump to valid moves.  (NOTE: for Black, up is positive, left is neg, right is pos.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
-                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
@@ -316,19 +333,19 @@ public class GameController
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
                 //If the space up and left has a red piece, and the space 2 up and 2 to the left is available and legal
-                //add the jump to valid moves.  (NOTE: for Red, up is positive, left is pos, right is neg.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                //add the jump to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 2;
-                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and right has a red piece, and the space 2 up and 2 to the right is available and legal
-                //add the jump to valid moves.  (NOTE: for Red, up is pos, left is pos, right is neg.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] + 2;
+                //add the jump to valid moves.  (NOTE: for Red, up is neg, left is pos, right is neg.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 2;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 2;
-                enemy[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                enemy[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 enemy[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target) && HoldsOpponent(enemy))
                     PlaceInAvailableTargets(ref availableTargets, target);
@@ -400,14 +417,14 @@ public class GameController
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
-                //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Black, up is negative, left is neg, right is pos.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Black, up is positive, left is neg, right is pos.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and to the right is available and legal, add it to valid moves.
-                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
+                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
@@ -447,14 +464,14 @@ public class GameController
                 currPos[0] = _board.GetPieces()[i].GetLocation()[0];
                 currPos[1] = _board.GetPieces()[i].GetLocation()[1];
 
-                //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is positive, left is pos, right is neg.) 
-                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                //If the space up and to the left is available and legal, add it to valid moves.  (NOTE: for Red, up is negative, left is pos, right is neg.) 
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] + 1;
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
 
                 //If the space up and to the right is available and legal, add it to valid moves.
-                target[0] = _board.GetPieces()[i].GetLocation()[0] + 1;
+                target[0] = _board.GetPieces()[i].GetLocation()[0] - 1;
                 target[1] = _board.GetPieces()[i].GetLocation()[1] - 1;
                 if (IsAvailableAndLegal(target))
                     PlaceInAvailableTargets(ref availableTargets, target);
@@ -533,7 +550,7 @@ public class GameController
             return false;
 
         //grab all the values (finishing positions of valid moves which start at the key) and convert to an int[]
-        Object validFinishesObject = _validMoves[startDva];
+        System.Object validFinishesObject = _validMoves[startDva];
         int[] validFinishes = validFinishesObject as int[];
 
         //go through all finishing position values.
@@ -557,6 +574,12 @@ public class GameController
     {
         DictValueArray dva = new DictValueArray(key);
         _validMoves.Add(dva, value);
+    }
+
+    // Update is called once per frame 
+    void Update()
+    {
+
     }
 }
 
